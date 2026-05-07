@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
-import { Download, Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { Download, Plus, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { rowsToCsv, downloadTextFile } from '../../lib/csvExport';
+import { toastConfirm, toastError, toastSuccess } from '../../lib/appToast';
 import { getEffectivePrices } from '../../lib/productMapper';
 
 function fmtPk(ts) {
@@ -172,6 +173,29 @@ export default function OrdersAdminSection({
       await refreshOrders();
     } catch (err) {
       setCrmError(err.message || String(err));
+    }
+    setBusy(false);
+  };
+
+  const deleteOrder = async (o) => {
+    if (!supabase) return;
+    const ok = await toastConfirm(`Delete order ${o.order_number}?`, 'This permanently removes the order.', {
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+    });
+    if (!ok) return;
+    setBusy(true);
+    setCrmError('');
+    try {
+      const { error } = await supabase.from('orders').delete().eq('id', o.id);
+      if (error) throw error;
+      setExpandedId((id) => (id === o.id ? null : id));
+      await refreshOrders();
+      toastSuccess('Order deleted');
+    } catch (err) {
+      const msg = err.message || String(err);
+      setCrmError(msg);
+      toastError('Could not delete order', msg);
     }
     setBusy(false);
   };
@@ -369,19 +393,20 @@ export default function OrdersAdminSection({
                 <th className="px-2 lg:px-3 py-3 whitespace-nowrap">Fulfillment</th>
                 <th className="px-2 lg:px-3 py-3">Delivery</th>
                 <th className="px-2 lg:px-3 py-3">Ship status</th>
+                <th className="px-2 lg:px-3 py-3 text-right whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody>
               {ordersLoading && (
                 <tr>
-                  <td colSpan={10} className="px-4 lg:px-6 py-10 text-center text-dark/45 font-light">
+                  <td colSpan={11} className="px-4 lg:px-6 py-10 text-center text-dark/45 font-light">
                     Loading orders…
                   </td>
                 </tr>
               )}
               {!ordersLoading && !sortedOrders.length && (
                 <tr>
-                  <td colSpan={10} className="px-4 lg:px-6 py-10 text-center text-dark/45 font-light">
+                  <td colSpan={11} className="px-4 lg:px-6 py-10 text-center text-dark/45 font-light">
                     No orders yet. Checkout will create rows once Supabase migration is applied.
                   </td>
                 </tr>
@@ -461,10 +486,22 @@ export default function OrdersAdminSection({
                             <option value="cancelled">Cancelled</option>
                           </select>
                         </td>
+                        <td className="px-2 lg:px-3 py-3 text-right whitespace-nowrap align-middle">
+                          <button
+                            type="button"
+                            disabled={busy || ordersLoading || !supabase}
+                            onClick={() => deleteOrder(o)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] uppercase tracking-[0.15em] font-bold text-red-600 hover:bg-red-600 hover:text-white transition-colors disabled:opacity-30"
+                            aria-label={`Delete order ${o.order_number}`}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+                            Delete
+                          </button>
+                        </td>
                       </tr>
                       {open && (
                         <tr className="bg-offwhite/80 border-b border-dark/5">
-                          <td colSpan={10} className="px-6 py-6">
+                          <td colSpan={11} className="px-6 py-6">
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-sm">
                               <div className="space-y-3">
                                 {o.status === 'draft' && (

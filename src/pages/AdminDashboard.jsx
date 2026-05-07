@@ -1056,9 +1056,13 @@ const AdminDashboard = () => {
 
         {tab === 'clients' && (
           <ClientsAnalyticsSection
+            supabase={supabase}
             orders={orders}
             ordersLoading={ordersLoading}
             refreshOrders={refreshOrders}
+            busy={busy}
+            setBusy={setBusy}
+            setCrmError={setCrmError}
           />
         )}
       </main>

@@ -1,11 +1,16 @@
 import React, { useMemo } from 'react';
-import { Download, Users, Mail, TrendingUp } from 'lucide-react';
+import { Download, Users, Mail, TrendingUp, Trash2 } from 'lucide-react';
 import { rowsToCsv, downloadTextFile } from '../../lib/csvExport';
+import { toastConfirm, toastError, toastSuccess } from '../../lib/appToast';
 
 export default function ClientsAnalyticsSection({
+  supabase,
   orders,
   ordersLoading,
   refreshOrders,
+  busy,
+  setBusy,
+  setCrmError,
 }) {
   const clientRows = useMemo(() => {
     const map = new Map();
@@ -53,6 +58,33 @@ export default function ClientsAnalyticsSection({
   };
 
   const emptyHint = clientRows.length === 0 && !ordersLoading;
+
+  const deleteOrdersForClient = async (emailKey, orderCount) => {
+    if (!supabase) return;
+    const ids = (orders || [])
+      .filter((o) => (o.email || '').trim().toLowerCase() === emailKey)
+      .map((o) => o.id);
+    if (!ids.length) return;
+    const ok = await toastConfirm(
+      `Delete all ${orderCount} order${orderCount === 1 ? '' : 's'} for ${emailKey}?`,
+      'This permanently removes those orders from the database.',
+      { confirmLabel: 'Delete', cancelLabel: 'Cancel' }
+    );
+    if (!ok) return;
+    setBusy(true);
+    setCrmError('');
+    try {
+      const { error } = await supabase.from('orders').delete().in('id', ids);
+      if (error) throw error;
+      await refreshOrders();
+      toastSuccess(orderCount === 1 ? 'Order deleted' : 'Orders deleted');
+    } catch (err) {
+      const msg = err.message || String(err);
+      setCrmError(msg);
+      toastError('Could not delete orders', msg);
+    }
+    setBusy(false);
+  };
 
   return (
     <div className="space-y-8">
@@ -133,19 +165,20 @@ export default function ClientsAnalyticsSection({
                 <th className="px-6 py-4 tabular-nums">Orders</th>
                 <th className="px-6 py-4 tabular-nums">Lifetime PKR</th>
                 <th className="px-6 py-4">Last order</th>
+                <th className="px-6 py-4 text-right whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody>
               {ordersLoading && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-dark/45 font-light">
+                  <td colSpan={6} className="px-6 py-12 text-center text-dark/45 font-light">
                     Loading…
                   </td>
                 </tr>
               )}
               {!ordersLoading && emptyHint && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-dark/45 font-light">
+                  <td colSpan={6} className="px-6 py-12 text-center text-dark/45 font-light">
                     No orders with emails yet. Complete a checkout after running the orders migration.
                   </td>
                 </tr>
@@ -165,6 +198,18 @@ export default function ClientsAnalyticsSection({
                             dateStyle: 'medium',
                           })
                         : '—'}
+                    </td>
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
+                      <button
+                        type="button"
+                        disabled={busy || ordersLoading || !supabase}
+                        onClick={() => deleteOrdersForClient(c.email, c.order_count)}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] uppercase tracking-[0.15em] font-bold text-red-600 hover:bg-red-600 hover:text-white transition-colors disabled:opacity-30"
+                        aria-label={`Delete all orders for ${c.email}`}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
