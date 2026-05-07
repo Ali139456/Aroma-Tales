@@ -112,8 +112,8 @@ const Auth = () => {
   };
 
   return (
-    <div className="pt-40 pb-24 bg-white min-h-screen">
-      <div className="container mx-auto px-10 md:px-24 max-w-xl">
+    <div className="page-auth pt-28 sm:pt-36 md:pt-40 pb-16 sm:pb-24 bg-white min-h-screen">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-24 max-w-xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -123,7 +123,7 @@ const Auth = () => {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full border border-dark/10 mb-8 shadow-sm bg-white">
             <User className="w-6 h-6 text-dark/70" strokeWidth={1.5} />
           </div>
-          <h1 className="text-5xl md:text-6xl font-serif text-dark mb-4">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-dark mb-4">
             {mode === 'login' ? 'Welcome back' : 'Create account'}
           </h1>
           <p className="text-dark/55 font-light text-lg leading-relaxed max-w-md mx-auto">
@@ -137,7 +137,7 @@ const Auth = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-offwhite p-10 md:p-14 border border-dark/5 shadow-[0_8px_40px_-12px_rgba(18,18,18,0.08)] rounded-[2rem]"
+          className="auth-card bg-offwhite p-8 sm:p-10 md:p-14 border border-dark/5 shadow-[0_8px_40px_-12px_rgba(18,18,18,0.08)] rounded-[1.75rem] sm:rounded-[2rem]"
         >
           {!isSupabaseConfigured && (
             <p className="mb-8 text-center text-sm text-red-600 font-medium" role="alert">

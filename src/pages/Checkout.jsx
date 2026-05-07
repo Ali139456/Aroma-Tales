@@ -110,11 +110,11 @@ const Checkout = () => {
   };
 
   return (
-    <div className="pt-32 pb-20 bg-offwhite min-h-screen">
-      <div className="container mx-auto px-10 md:px-24">
+    <div className="page-checkout pt-28 sm:pt-32 md:pt-36 pb-16 sm:pb-20 bg-offwhite min-h-screen">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-24">
         
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-dark/40 mb-12">
+        <div className="flex flex-wrap items-center gap-2 text-[9px] sm:text-[10px] uppercase tracking-widest text-dark/40 mb-8 sm:mb-12">
           <Link to="/cart" className="hover:text-dark transition-colors">Information</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-dark font-bold">Shipping</span>
@@ -122,13 +122,13 @@ const Checkout = () => {
           <span className="text-dark/40">Payment</span>
         </div>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-start">
           
           {/* Left Column - Form */}
           <div className="lg:col-span-7 space-y-12">
             
             {/* Contact Information */}
-            <section className="space-y-8 bg-white p-10 md:p-14 rounded-3xl border border-dark/5 shadow-sm">
+            <section className="checkout-section-card space-y-6 sm:space-y-8 bg-white p-6 sm:p-10 md:p-14 rounded-2xl sm:rounded-3xl border border-dark/5 shadow-sm">
               <h2 className="text-2xl font-serif">Contact Information</h2>
               <div className="space-y-4">
                 <input 
@@ -143,7 +143,7 @@ const Checkout = () => {
             </section>
 
             {/* Shipping Address */}
-            <section className="space-y-8 bg-white p-10 md:p-14 rounded-3xl border border-dark/5 shadow-sm">
+            <section className="checkout-section-card space-y-6 sm:space-y-8 bg-white p-6 sm:p-10 md:p-14 rounded-2xl sm:rounded-3xl border border-dark/5 shadow-sm">
               <h2 className="text-2xl font-serif">Shipping Address</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <input 
@@ -200,7 +200,7 @@ const Checkout = () => {
             </section>
 
             {/* Delivery */}
-            <section className="space-y-8 bg-white p-10 md:p-14 rounded-3xl border border-dark/5 shadow-sm">
+            <section className="checkout-section-card space-y-6 sm:space-y-8 bg-white p-6 sm:p-10 md:p-14 rounded-2xl sm:rounded-3xl border border-dark/5 shadow-sm">
               <h2 className="text-2xl font-serif">Delivery method</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
@@ -226,7 +226,7 @@ const Checkout = () => {
             </section>
 
             {/* Payment Method */}
-            <section className="space-y-8 bg-white p-10 md:p-14 rounded-3xl border border-dark/5 shadow-sm">
+            <section className="checkout-section-card space-y-6 sm:space-y-8 bg-white p-6 sm:p-10 md:p-14 rounded-2xl sm:rounded-3xl border border-dark/5 shadow-sm">
               <div>
                 <h2 className="text-2xl font-serif">Payment Method</h2>
                 <p className="text-[10px] uppercase tracking-widest text-dark/40 font-bold mt-2">All transactions are secure and encrypted.</p>
@@ -297,7 +297,7 @@ const Checkout = () => {
 
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-5">
-            <div className="bg-white p-10 md:p-14 rounded-3xl border border-dark/5 sticky top-32">
+            <div className="checkout-section-card bg-white p-6 sm:p-10 md:p-14 rounded-2xl sm:rounded-3xl border border-dark/5 lg:sticky lg:top-28 xl:top-32 shadow-sm">
               <h2 className="text-2xl font-serif mb-10">Order Summary</h2>
               
               <div

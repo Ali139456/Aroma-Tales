@@ -52,7 +52,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white border-t border-dark/5 pt-32 pb-12 relative overflow-hidden">
+    <footer className="page--footer bg-white border-t border-dark/5 pt-20 sm:pt-28 md:pt-32 pb-10 sm:pb-12 relative overflow-hidden">
       {/* Background Logo Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none select-none z-0 w-full">
         <img 
@@ -61,8 +61,8 @@ const Footer = () => {
           className="w-full h-auto object-contain grayscale brightness-0" 
         />
       </div>
-      <div className="container mx-auto px-10 md:px-24 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 mb-32">
+      <div className="container mx-auto px-4 sm:px-8 md:px-16 lg:px-24 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 lg:gap-20 mb-16 sm:mb-24 md:mb-32">
           
           {/* Brand Info */}
           <div className="lg:col-span-5 space-y-10">

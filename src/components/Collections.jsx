@@ -59,9 +59,9 @@ const Collections = () => {
   }, []);
 
   return (
-    <section className="py-32 bg-white overflow-hidden" id="collections">
-      <div className="container mx-auto px-10 md:px-24">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+    <section className="page--collections py-16 sm:py-24 md:py-32 bg-white overflow-hidden" id="collections">
+      <div className="container mx-auto px-4 sm:px-8 md:px-16 lg:px-24">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 sm:mb-16 md:mb-20 gap-8">
           <div className="max-w-2xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -77,7 +77,7 @@ const Collections = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-6xl md:text-7xl font-serif text-dark leading-tight"
+              className="collections-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-dark leading-tight"
             >
               Explore our <br /> <span className="italic text-copper">Collections</span>
             </motion.h2>
@@ -95,7 +95,7 @@ const Collections = () => {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
           {categories.map((cat, index) => (
             <motion.div
               key={cat.slug}
@@ -113,8 +113,11 @@ const Collections = () => {
                     className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-dark/10 group-hover:bg-dark/0 transition-colors duration-500"></div>
-                  <div className="absolute bottom-10 left-10 right-10">
-                    <button className="w-full py-4 bg-white/90 backdrop-blur-md text-dark text-[10px] uppercase tracking-[0.4em] font-bold rounded-full opacity-0 translate-y-10 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                  <div className="absolute bottom-6 left-6 right-6 sm:bottom-10 sm:left-10 sm:right-10">
+                    <button
+                      type="button"
+                      className="w-full py-3.5 sm:py-4 bg-white/90 backdrop-blur-md text-dark text-[9px] sm:text-[10px] uppercase tracking-[0.35em] sm:tracking-[0.4em] font-bold rounded-full opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-10 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-500"
+                    >
                       Explore Now
                     </button>
                   </div>

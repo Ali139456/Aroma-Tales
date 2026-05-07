@@ -86,7 +86,7 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-offwhite flex flex-col items-center justify-center px-6 py-16">
+    <div className="page-admin-login min-h-screen bg-offwhite flex flex-col items-center justify-center px-4 sm:px-6 py-12 sm:py-16">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -98,13 +98,13 @@ const AdminLogin = () => {
             <Lock className="w-6 h-6 text-red-600" strokeWidth={1.5} aria-hidden />
           </div>
           <p className="text-[10px] uppercase tracking-[0.35em] font-bold text-red-600 mb-3">Staff only</p>
-          <h1 className="text-4xl md:text-5xl font-serif text-dark">Admin login</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-dark">Admin login</h1>
           <p className="mt-4 text-dark/50 text-sm font-light leading-relaxed">
             Sign in with a Supabase Auth user that has permission to edit catalog tables (see RLS policies).
           </p>
         </div>
 
-        <div className="bg-white p-10 md:p-12 rounded-[2rem] border border-dark/5 shadow-[0_8px_40px_-12px_rgba(18,18,18,0.08)]">
+        <div className="admin-login-card bg-white p-8 sm:p-10 md:p-12 rounded-[1.75rem] sm:rounded-[2rem] border border-dark/5 shadow-[0_8px_40px_-12px_rgba(18,18,18,0.08)]">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-3">
               <label htmlFor="admin-email" className="text-[10px] uppercase tracking-[0.3em] font-bold text-dark/40 ml-1">

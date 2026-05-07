@@ -614,7 +614,7 @@ const AdminDashboard = () => {
     'flex items-center gap-3 text-[10px] uppercase tracking-[0.32em] font-bold text-gold pt-1';
 
   return (
-    <div className="min-h-screen bg-[#f4f4f5] text-dark">
+    <div className="page-admin-crm min-h-screen bg-[#f4f4f5] text-dark">
       <header className="bg-white border-b border-dark/5 sticky top-0 z-20">
         <div className="w-full max-w-none mx-auto px-4 sm:px-6 lg:px-10 xl:px-14 py-5 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">

@@ -42,7 +42,7 @@ const OrderSuccess = () => {
   }, [celebrateOpen]);
 
   return (
-    <div className="pt-40 pb-20 bg-white min-h-screen flex items-center justify-center">
+    <div className="page-order-success pt-28 sm:pt-36 pb-16 sm:pb-20 bg-white min-h-screen flex items-center justify-center">
       <AnimatePresence>
         {celebrateOpen && (
           <motion.div
@@ -66,7 +66,7 @@ const OrderSuccess = () => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.98 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-[1] w-full max-w-[440px] rounded-[2rem] border border-dark/8 bg-white px-10 py-12 md:px-12 md:py-14 text-center shadow-[0_24px_80px_-12px_rgba(18,18,18,0.25)]"
+              className="order-success-modal relative z-[1] w-full max-w-[440px] rounded-[2rem] border border-dark/8 bg-white px-6 py-10 sm:px-10 sm:py-12 md:px-12 md:py-14 text-center shadow-[0_24px_80px_-12px_rgba(18,18,18,0.25)] max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
               role="dialog"
               aria-modal="true"
               aria-labelledby="order-placed-title"
@@ -122,20 +122,20 @@ const OrderSuccess = () => {
         )}
       </AnimatePresence>
 
-      <div className="container mx-auto px-10 md:px-24 max-w-4xl">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-24 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-offwhite p-12 md:p-20 rounded-[3rem] text-center space-y-10 border border-dark/5 shadow-sm"
+          className="bg-offwhite p-8 sm:p-12 md:p-16 lg:p-20 rounded-[2rem] sm:rounded-[3rem] text-center space-y-8 sm:space-y-10 border border-dark/5 shadow-sm"
         >
           <div className="w-24 h-24 bg-dark text-gold rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-12 h-12" strokeWidth={1.5} aria-hidden />
           </div>
 
           <div className="space-y-4">
-            <h1 className="text-5xl md:text-6xl font-serif">Order confirmed</h1>
-            <p className="text-dark/50 text-xl font-light">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif">Order confirmed</h1>
+            <p className="text-dark/50 text-lg sm:text-xl font-light px-2">
               Thank you for your purchase. Your olfactory journey has begun.
             </p>
           </div>

@@ -1,25 +1,26 @@
-import React, { useEffect } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from 'react-router-dom'
 import { Toaster } from 'sonner'
-import Lenis from 'lenis'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import FeaturedCollection from './components/FeaturedCollection'
 import Collections from './components/Collections'
 import Footer from './components/Footer'
-import Shop from './pages/Shop'
-import ProductDetail from './pages/ProductDetail'
-import Contact from './pages/Contact'
-import Auth from './pages/Auth'
-import Cart from './pages/Cart'
-import Checkout from './pages/Checkout'
-import OrderSuccess from './pages/OrderSuccess'
-import AdminLogin from './pages/AdminLogin'
-import AdminDashboard from './pages/AdminDashboard'
 import AdminRoute from './components/AdminRoute'
 import ScrollToTop from './components/ScrollToTop'
 import WhatsAppButton from './components/WhatsAppButton'
 import CustomCursor from './components/CustomCursor'
+import PageLoader from './components/PageLoader'
+
+const Shop = lazy(() => import('./pages/Shop'))
+const ProductDetail = lazy(() => import('./pages/ProductDetail'))
+const Contact = lazy(() => import('./pages/Contact'))
+const Auth = lazy(() => import('./pages/Auth'))
+const Cart = lazy(() => import('./pages/Cart'))
+const Checkout = lazy(() => import('./pages/Checkout'))
+const OrderSuccess = lazy(() => import('./pages/OrderSuccess'))
+const AdminLogin = lazy(() => import('./pages/AdminLogin'))
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
 
 /** Keeps pointer + caret usable on auth/admin while CustomCursor is hidden outside storefront chrome. */
 function NativeCursorSync() {
@@ -46,28 +47,38 @@ function LenisScroll() {
       return undefined
     }
 
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-      infinite: false,
-    })
-
+    let cancelled = false
     let rafId = 0
-    function raf(time) {
-      lenis.raf(time)
+    let lenisInstance = null
+
+    ;(async () => {
+      const { default: Lenis } = await import('lenis')
+      if (cancelled) return
+
+      lenisInstance = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+        infinite: false,
+      })
+
+      function raf(time) {
+        lenisInstance?.raf(time)
+        rafId = requestAnimationFrame(raf)
+      }
       rafId = requestAnimationFrame(raf)
-    }
-    rafId = requestAnimationFrame(raf)
+    })()
 
     return () => {
+      cancelled = true
       cancelAnimationFrame(rafId)
-      lenis.destroy()
+      lenisInstance?.destroy()
+      lenisInstance = null
     }
   }, [pathname])
 
@@ -106,27 +117,29 @@ function App() {
       <NativeCursorSync />
       <LenisScroll />
       <div className="bg-white min-h-screen text-dark font-sans selection:bg-dark selection:text-white relative">
-        <Routes>
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <AdminDashboard />
-              </AdminRoute>
-            }
-          />
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/order-success" element={<OrderSuccess />} />
-          </Route>
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            />
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order-success" element={<OrderSuccess />} />
+            </Route>
+          </Routes>
+        </Suspense>
       </div>
       <Toaster
         position="top-center"

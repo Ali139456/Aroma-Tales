@@ -5,7 +5,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="relative min-h-[90vh] w-full flex items-center bg-white overflow-hidden pt-20">
+    <section className="page--home relative min-h-[88vh] sm:min-h-[90vh] w-full flex items-center bg-white overflow-hidden pt-28 pb-14 sm:pt-32 sm:pb-16 md:pt-24 md:pb-0">
       {/* Background Color Blooms - Animated */}
       <motion.div 
         animate={{ 
@@ -18,7 +18,7 @@ const Hero = () => {
           repeat: Infinity, 
           ease: "easeInOut" 
         }}
-        className="absolute top-[15%] left-[5%] w-[500px] h-[500px] bg-purple-100/30 blur-[130px] rounded-full pointer-events-none"
+        className="absolute top-[15%] left-[5%] w-[min(92vw,260px)] h-[min(92vw,260px)] sm:w-[380px] sm:h-[380px] md:w-[500px] md:h-[500px] bg-purple-100/30 blur-[130px] rounded-full pointer-events-none"
       ></motion.div>
       
       <motion.div 
@@ -32,7 +32,7 @@ const Hero = () => {
           repeat: Infinity, 
           ease: "easeInOut" 
         }}
-        className="absolute bottom-[5%] left-[2%] w-[400px] h-[400px] bg-pink-100/20 blur-[110px] rounded-full pointer-events-none"
+        className="absolute bottom-[5%] left-[2%] w-[min(88vw,220px)] h-[min(88vw,220px)] sm:w-[320px] sm:h-[320px] md:w-[400px] md:h-[400px] bg-pink-100/20 blur-[110px] rounded-full pointer-events-none"
       ></motion.div>
       
       <motion.div 
@@ -46,7 +46,7 @@ const Hero = () => {
           repeat: Infinity, 
           ease: "easeInOut" 
         }}
-        className="absolute top-[5%] left-[35%] w-[250px] h-[250px] bg-orange-100/30 blur-[90px] rounded-full pointer-events-none"
+        className="absolute top-[5%] left-[35%] w-[min(70vw,160px)] h-[min(70vw,160px)] sm:w-[200px] sm:h-[200px] md:w-[250px] md:h-[250px] bg-orange-100/30 blur-[90px] rounded-full pointer-events-none"
       ></motion.div>
 
       <motion.div 
@@ -59,7 +59,7 @@ const Hero = () => {
           repeat: Infinity, 
           ease: "easeInOut" 
         }}
-        className="absolute bottom-[20%] right-[10%] w-[350px] h-[350px] bg-blue-50/10 blur-[120px] rounded-full pointer-events-none"
+        className="absolute bottom-[20%] right-[10%] w-[min(85vw,200px)] h-[min(85vw,200px)] sm:w-[280px] sm:h-[280px] md:w-[350px] md:h-[350px] bg-blue-50/10 blur-[120px] rounded-full pointer-events-none"
       ></motion.div>
 
       {/* Tiny Subtle Gradients */}
@@ -85,19 +85,19 @@ const Hero = () => {
       ></motion.div>
       
       {/* Top Right Arrow Icon */}
-      <div className="absolute top-12 right-12 md:top-20 md:right-20">
-        <ArrowUpRight className="w-12 h-12 text-dark" strokeWidth={1.5} />
+      <div className="hidden sm:block absolute top-12 right-6 md:top-20 md:right-20">
+        <ArrowUpRight className="w-8 h-8 sm:w-12 sm:h-12 text-dark" strokeWidth={1.5} />
       </div>
 
-      <div className="container mx-auto px-10 md:px-24 relative z-10 flex flex-col md:flex-row items-center justify-between gap-16">
+      <div className="container mx-auto px-4 sm:px-8 md:px-16 lg:px-24 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
         
-        {/* Left Content */}
-        <div className="w-full md:w-1/2 flex flex-col items-start text-left">
+        {/* Copy — centered on small screens, left-aligned on large */}
+        <div className="w-full lg:w-1/2 flex flex-col items-center text-center lg:items-start lg:text-left order-2 lg:order-1">
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-[64px] md:text-[80px] font-bold text-dark leading-[1.05] mb-6 font-sans tracking-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5rem] font-bold text-dark leading-[1.05] mb-4 sm:mb-6 font-sans tracking-tight"
           >
             Elevate Your <br /> Scent Game
           </motion.h1>
@@ -106,7 +106,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="text-dark/80 text-xl font-normal mb-10"
+            className="text-dark/80 text-base sm:text-lg md:text-xl font-normal mb-8 sm:mb-10 max-w-md"
           >
             Premium fragrances for every personality
           </motion.p>
@@ -115,17 +115,18 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex justify-center lg:justify-start w-full"
           >
             <Link to="/shop">
-              <button className="px-10 py-4 border border-dark rounded-full text-lg font-medium hover:bg-dark hover:text-white transition-all duration-300">
+              <button className="w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 border border-dark rounded-full text-base sm:text-lg font-medium hover:bg-dark hover:text-white transition-all duration-300 min-h-[48px]">
                 Shop Now
               </button>
             </Link>
           </motion.div>
         </div>
 
-        {/* Right Content - Circular Image */}
-        <div className="w-full md:w-1/2 flex justify-center items-center relative">
+        {/* Hero visual — first on mobile */}
+        <div className="w-full lg:w-1/2 flex justify-center items-center relative order-1 lg:order-2 max-w-[min(100%,420px)] lg:max-w-none mx-auto lg:mx-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ 
@@ -138,7 +139,7 @@ const Hero = () => {
               scale: { duration: 1 },
               y: { duration: 6, repeat: Infinity, ease: "easeInOut" }
             }}
-            className="relative w-full max-w-[550px] aspect-square rounded-full border border-dark/10 p-2 overflow-visible"
+            className="relative w-full max-w-[min(100vw-2rem,550px)] mx-auto lg:mx-0 aspect-square rounded-full border border-dark/10 p-2 overflow-visible"
           >
             {/* Outer ring */}
             <div className="absolute inset-[-10px] rounded-full border border-dark/5 pointer-events-none"></div>
@@ -159,11 +160,9 @@ const Hero = () => {
       </div>
 
       {/* Decorative Discover Text (optional, but keep it minimal as requested) */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden md:block">
-        <div className="flex flex-col items-center gap-4 opacity-20">
-          <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Discover</span>
-          <div className="w-[1px] h-10 bg-dark"></div>
-        </div>
+      <div className="absolute bottom-6 sm:bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 sm:gap-4 opacity-25 md:opacity-20">
+        <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Discover</span>
+        <div className="w-[1px] h-8 sm:h-10 bg-dark"></div>
       </div>
     </section>
   );

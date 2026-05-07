@@ -1,0 +1,110 @@
+/**
+ * Route-scoped responsive rules. Each page mounts a root hook class:
+ *   Home: .page--home    Shop: .page-shop    PDP: .page-product
+ *   Contact / Auth / Cart / Checkout / Order success: .page-contact, .page-auth, …
+ * Tailwind handles most layouts; this file covers scroll behavior, SVH, and optical tweaks.
+ */
+
+/* ------------------------- Home (Hero) ------------------------- */
+@media (max-width: 639px) {
+  .page--home {
+    min-height: min(100svh, 56rem);
+  }
+}
+
+/* ------------------------- Shop ------------------------- */
+@media (max-width: 767px) {
+  .page-shop .shop-categories-row {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .page-shop .shop-categories-row::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .page-shop .shop-page-title {
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ------------------------- Product detail ------------------------- */
+@media (max-width: 1023px) {
+  .page-product .pdp-mobile-tab-row {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .page-product .pdp-mobile-tab-row::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ------------------------- Contact ------------------------- */
+@media (max-width: 639px) {
+  .page-contact .contact-page-title {
+    line-height: 1.08;
+  }
+}
+
+/* ------------------------- Auth ------------------------- */
+@media (max-width: 479px) {
+  .page-auth .auth-card {
+    border-radius: 1.5rem;
+  }
+}
+
+/* ------------------------- Cart ------------------------- */
+@media (max-width: 1023px) {
+  .page-cart .cart-summary-panel {
+    position: relative;
+    top: auto;
+  }
+}
+
+/* ------------------------- Checkout ------------------------- */
+@media (max-width: 639px) {
+  .page-checkout .checkout-section-card {
+    border-radius: 1.25rem;
+  }
+}
+
+/* ------------------------- Order success ------------------------- */
+@media (max-width: 479px) {
+  .page-order-success .order-success-modal {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    border-radius: 1.5rem;
+  }
+}
+
+/* ------------------------- Collections (home section) ------------------------- */
+@media (max-width: 639px) {
+  .page--collections .collections-heading {
+    line-height: 1.05;
+  }
+}
+
+/* ------------------------- Featured boutique strip ------------------------- */
+@media (max-width: 639px) {
+  .page--featured .featured-heading {
+    line-height: 1.08;
+  }
+}
+
+/* ------------------------- Admin (minimal) ------------------------- */
+@media (max-width: 1023px) {
+  .page-admin-login .admin-login-card {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .page-admin-crm {
+    overflow-x: hidden;
+  }
+}

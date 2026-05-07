@@ -7,9 +7,9 @@ import { getEffectivePrices } from '../lib/productMapper';
 const FeaturedCollection = () => {
   const { products } = useProducts();
   return (
-    <section id="collections" className="py-32 md:py-48 bg-white text-dark border-t border-dark/5 relative">
-      <div className="container mx-auto px-10 md:px-20">
-        <div className="flex flex-col items-center text-center mb-32 space-y-6">
+    <section className="page--featured py-20 sm:py-28 md:py-36 lg:py-48 bg-white text-dark border-t border-dark/5 relative">
+      <div className="container mx-auto px-4 sm:px-8 md:px-16 lg:px-20">
+        <div className="flex flex-col items-center text-center mb-16 sm:mb-24 md:mb-32 space-y-5 sm:space-y-6">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -23,13 +23,13 @@ const FeaturedCollection = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-6xl md:text-7xl font-light tracking-tight"
+            className="featured-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight px-2"
           >
             Signature <span className="italic">Archives</span>
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-24 mb-32">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 sm:gap-x-10 lg:gap-x-12 gap-y-16 sm:gap-y-20 lg:gap-y-24 mb-16 sm:mb-24 md:mb-32">
           {products.map((product, index) => (
             <Link key={product.id} to={`/product/${product.id}`}>
               <motion.div
@@ -51,8 +51,8 @@ const FeaturedCollection = () => {
                   
                   {/* Minimalist Quick Add */}
                   <div className="absolute inset-0 bg-dark/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="absolute bottom-0 left-0 w-full p-6 translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
-                    <button className="w-full py-4 bg-dark text-white text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-gold transition-colors shadow-2xl rounded-2xl">
+                  <div className="absolute bottom-0 left-0 w-full p-4 sm:p-6 translate-y-0 opacity-100 sm:translate-y-6 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 transition-all duration-700">
+                    <button type="button" className="w-full py-3.5 sm:py-4 bg-dark text-white text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-gold transition-colors shadow-2xl rounded-xl sm:rounded-2xl">
                       View Details — Rs.{getEffectivePrices(product).price}
                     </button>
                   </div>

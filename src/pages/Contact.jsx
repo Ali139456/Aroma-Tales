@@ -4,9 +4,9 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
 const Contact = () => {
   return (
-    <div className="pt-40 pb-20 bg-white min-h-screen">
-      <div className="container mx-auto px-10 md:px-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start">
+    <div className="page-contact pt-32 sm:pt-36 md:pt-40 pb-16 sm:pb-20 bg-white min-h-screen">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-24 items-start">
           
           {/* Left Side - Info */}
           <motion.div
@@ -14,8 +14,10 @@ const Contact = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-7xl font-serif mb-10 text-dark">Get in Touch</h1>
-            <p className="text-dark/60 text-lg font-light max-w-md mb-16 leading-relaxed">
+            <h1 className="contact-page-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif mb-6 sm:mb-10 text-dark leading-[1.05]">
+              Get in Touch
+            </h1>
+            <p className="text-dark/60 text-base sm:text-lg font-light max-w-md mb-10 sm:mb-16 leading-relaxed">
               We'd love to hear from you. Whether you have a question about our collections, our philosophy, or just want to share your thoughts.
             </p>
 
@@ -57,7 +59,7 @@ const Contact = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-offwhite p-12 md:p-16 border border-dark/5 shadow-sm rounded-3xl"
+            className="bg-offwhite p-8 sm:p-12 md:p-16 border border-dark/5 shadow-sm rounded-2xl sm:rounded-3xl"
           >
             <form className="space-y-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

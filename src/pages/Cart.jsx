@@ -9,12 +9,12 @@ const Cart = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="pt-40 pb-20 min-h-[70vh] flex flex-col items-center justify-center text-center px-10">
+      <div className="pt-28 sm:pt-36 pb-16 sm:pb-20 min-h-[70vh] flex flex-col items-center justify-center text-center px-4 sm:px-8">
         <div className="w-24 h-24 bg-offwhite rounded-full flex items-center justify-center mb-8">
           <ShoppingBag className="w-10 h-10 text-dark/20" />
         </div>
-        <h1 className="text-4xl font-serif mb-6">Your bag is empty</h1>
-        <p className="text-dark/50 font-light mb-10 max-w-md">
+        <h1 className="text-3xl sm:text-4xl font-serif mb-5 sm:mb-6 px-2">Your bag is empty</h1>
+        <p className="text-dark/50 font-light mb-8 sm:mb-10 max-w-md text-sm sm:text-base px-2">
           Discovery awaits. Explore our collections and find the scent that speaks to your soul.
         </p>
         <Link 
@@ -28,14 +28,14 @@ const Cart = () => {
   }
 
   return (
-    <div className="pt-40 pb-20 bg-white min-h-screen">
-      <div className="container mx-auto px-10 md:px-24">
-        <div className="flex flex-col lg:flex-row gap-20">
+    <div className="page-cart pt-28 sm:pt-36 md:pt-40 pb-16 sm:pb-20 bg-white min-h-screen">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-24">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 xl:gap-20">
           
           {/* Cart Items */}
           <div className="lg:col-span-8 flex-grow">
-            <div className="flex items-center justify-between mb-12">
-              <h1 className="text-5xl font-serif">Shopping Bag</h1>
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12">
+              <h1 className="text-4xl sm:text-5xl font-serif">Shopping Bag</h1>
               <span className="text-[11px] uppercase tracking-[0.3em] text-dark/40 font-bold">
                 {cart.length} {cart.length === 1 ? 'Item' : 'Items'}
               </span>
@@ -48,7 +48,7 @@ const Cart = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   key={`${item.id}-${item.size}`} 
-                  className="flex flex-col md:flex-row items-center gap-10 p-8 bg-offwhite rounded-3xl border border-dark/5"
+                  className="flex flex-col md:flex-row items-center gap-8 md:gap-10 p-6 sm:p-8 bg-offwhite rounded-2xl sm:rounded-3xl border border-dark/5"
                 >
                   <div className="w-32 h-40 bg-white rounded-2xl overflow-hidden shrink-0 shadow-sm">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
@@ -98,8 +98,8 @@ const Cart = () => {
 
           {/* Summary */}
           <div className="lg:w-96">
-            <div className="bg-dark text-white p-12 rounded-[2.5rem] sticky top-32 shadow-2xl">
-              <h2 className="text-3xl font-serif mb-10">Summary</h2>
+            <div className="cart-summary-panel bg-dark text-white p-8 sm:p-10 lg:p-12 rounded-[2rem] lg:rounded-[2.5rem] lg:sticky lg:top-28 xl:top-32 shadow-2xl w-full">
+              <h2 className="text-2xl sm:text-3xl font-serif mb-8 sm:mb-10">Summary</h2>
               
               <div className="space-y-6 mb-10">
                 <div className="flex justify-between text-white/60 font-light">

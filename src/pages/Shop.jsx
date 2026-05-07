@@ -99,19 +99,21 @@ const Shop = () => {
   };
 
   return (
-    <div className="pt-40 pb-20 bg-offwhite min-h-screen">
-      <div className="container mx-auto px-6 md:px-12 lg:px-24">
+    <div className="page-shop pt-32 sm:pt-36 md:pt-40 pb-16 sm:pb-20 bg-offwhite min-h-screen">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-24">
         
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-10">
-          <div className="space-y-6 max-w-2xl">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-12 sm:mb-16 lg:mb-20 gap-8 lg:gap-10">
+          <div className="space-y-4 sm:space-y-6 max-w-2xl w-full">
              <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-dark/30 ml-1">
                 <Link to="/" className="hover:text-dark transition-colors">Atelier</Link>
                 <span className="opacity-30">/</span>
                 <span className="text-dark font-bold">Shop All</span>
              </div>
-             <h1 className="text-7xl font-serif text-dark tracking-tight">The <span className="italic text-copper">Collection</span></h1>
-             <p className="text-dark/50 text-lg font-light leading-relaxed">
+             <h1 className="shop-page-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-dark tracking-tight">
+               The <span className="italic text-copper">Collection</span>
+             </h1>
+             <p className="text-dark/50 text-base sm:text-lg font-light leading-relaxed">
                Explore our curated selection of provocation extracts. Each scent is a hand-poured story, designed to linger in the memory long after the wearer has left the room.
              </p>
              {productSlugSet && productSlugSet.size > 0 && (
@@ -121,37 +123,51 @@ const Shop = () => {
              )}
           </div>
           
-          <div className="flex flex-wrap items-center gap-6 pb-2">
-             <div className="relative group">
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark/30 group-focus-within:text-gold transition-colors" />
+          <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto lg:max-w-md lg:justify-end pb-0 lg:pb-2">
+             <div className="relative group w-full sm:w-auto">
+                <Search className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-dark/30 group-focus-within:text-gold transition-colors pointer-events-none" />
                 <input 
                   type="text" 
                   placeholder="Search olfactory notes..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-white border border-dark/5 rounded-full py-4 pl-14 pr-8 text-[11px] uppercase tracking-widest font-bold focus:border-dark/20 outline-none w-64 shadow-sm transition-all"
+                  className="bg-white border border-dark/5 rounded-full py-3.5 sm:py-4 pl-11 sm:pl-14 pr-6 text-[11px] uppercase tracking-widest font-bold focus:border-dark/20 outline-none w-full sm:w-64 lg:w-72 shadow-sm transition-all min-h-[48px]"
                 />
              </div>
           </div>
         </div>
 
         {/* Filter Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-8 mb-16 py-6 border-y border-dark/5">
-           <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between mb-12 sm:mb-16 py-6 border-y border-dark/5">
+           <div className="shop-categories-row flex overflow-x-auto gap-2 pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:overflow-visible snap-x snap-mandatory sm:snap-none">
               {categories.map(cat => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-8 py-3 rounded-full text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-300 ${activeCategory === cat ? 'bg-dark text-white shadow-xl scale-105' : 'bg-white text-dark/40 border border-dark/5 hover:border-dark/20'}`}
+                  className={`shrink-0 snap-start px-5 sm:px-8 py-3 min-h-[44px] rounded-full text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-300 ${activeCategory === cat ? 'bg-dark text-white shadow-xl scale-105' : 'bg-white text-dark/40 border border-dark/5 hover:border-dark/20'}`}
                 >
                   {cat}
                 </button>
               ))}
            </div>
 
-           <div className="flex items-center gap-8">
-              <div className="relative group">
-                 <button className="flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-bold text-dark/60 hover:text-dark transition-colors">
+           <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 w-full lg:w-auto">
+              <label className="lg:hidden w-full max-w-xs">
+                <span className="sr-only">Sort by</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full rounded-full border border-dark/15 bg-white py-3 px-4 text-[10px] uppercase tracking-widest font-bold text-dark/70 outline-none focus:border-dark/35 min-h-[48px]"
+                >
+                  {sortOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="hidden lg:block relative group">
+                 <button type="button" className="flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-bold text-dark/60 hover:text-dark transition-colors">
                     Sort By: <span className="text-dark">{sortBy}</span>
                     <ChevronDown className="w-4 h-4" />
                  </button>
@@ -159,6 +175,7 @@ const Shop = () => {
                     {sortOptions.map(opt => (
                       <button 
                         key={opt} 
+                        type="button"
                         onClick={() => setSortBy(opt)}
                         className="w-full text-left px-6 py-3 text-[10px] uppercase tracking-widest font-bold text-dark/40 hover:text-dark hover:bg-offwhite rounded-xl transition-all"
                       >
@@ -167,14 +184,14 @@ const Shop = () => {
                     ))}
                  </div>
               </div>
-              <span className="text-[10px] uppercase tracking-widest font-bold text-dark/20">
+              <span className="text-[10px] uppercase tracking-widest font-bold text-dark/20 whitespace-nowrap">
                 {productsLoading ? '…' : filteredProducts.length} Results
               </span>
            </div>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 sm:gap-x-8 gap-y-14 sm:gap-y-16 lg:gap-y-20">
            <AnimatePresence mode="popLayout">
               {filteredProducts.map((product, index) => (
                 <motion.div
@@ -225,7 +242,7 @@ const Shop = () => {
                                return cap !== null && (cap === 0 || used >= cap);
                              })()}
                              onClick={(e) => handleQuickAdd(product, e)}
-                             className={`w-full py-4 rounded-2xl text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-500 flex items-center justify-center gap-3 shadow-2xl disabled:opacity-40 disabled:pointer-events-none disabled:hover:translate-y-10 ${addedItems[product.id] ? 'bg-gold text-white translate-y-0 opacity-100' : 'bg-dark text-white translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'}`}
+                             className={`w-full py-4 rounded-2xl text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-500 flex items-center justify-center gap-3 shadow-2xl disabled:opacity-40 disabled:pointer-events-none disabled:hover:translate-y-0 translate-y-0 opacity-100 sm:translate-y-10 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 ${addedItems[product.id] ? 'bg-gold text-white translate-y-0 opacity-100' : 'bg-dark text-white'}`}
                            >
                               {addedItems[product.id] ? (
                                 <>
