@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Menu, X, Search } from 'lucide-react';
+import { ShoppingBag, Menu, X, Search, User } from 'lucide-react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
@@ -124,6 +124,14 @@ const Navbar = () => {
             </div>
             <span className="hidden md:inline text-[11px] uppercase tracking-[0.2em] font-bold">Bag</span>
           </Link>
+
+          <Link
+            to="/auth"
+            aria-label="Account"
+            className="text-dark/70 hover:text-dark transition-colors flex items-center justify-center group p-1 -m-1"
+          >
+            <User className="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" strokeWidth={1.5} />
+          </Link>
           
           <button 
             className="md:hidden text-dark p-2"
@@ -155,6 +163,14 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
+              <Link
+                to="/auth"
+                aria-label="Account"
+                className="text-dark hover:text-gold transition-colors flex items-center justify-center p-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <User className="w-8 h-8" strokeWidth={1.5} aria-hidden />
+              </Link>
             </div>
           </motion.div>
         )}

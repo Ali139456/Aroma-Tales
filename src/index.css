@@ -27,15 +27,75 @@
     @apply font-serif;
     line-height: 1.2;
   }
+
+  input,
+  textarea,
+  select {
+    caret-color: #121212;
+  }
+
+  /* Native single-select chevron: consistent across admin + future storefront selects */
+  select:not([multiple]):not([size]),
+  select[size="1"] {
+    --select-chevron: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2720%27 height=%2720%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23121212%27 stroke-opacity=%270.42%27 stroke-width=%272.25%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E");
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: var(--select-chevron);
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.125rem 1.125rem;
+    background-clip: padding-box;
+  }
+
+  select:not([multiple]):not([size]):focus-visible,
+  select[size="1"]:focus-visible {
+    --select-chevron: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2720%27 height=%2720%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23121212%27 stroke-opacity=%270.72%27 stroke-width=%272.25%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E");
+  }
+
+  select:not([multiple]):not([size]):disabled,
+  select[size="1"]:disabled {
+    --select-chevron: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2720%27 height=%2720%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23121212%27 stroke-opacity=%270.22%27 stroke-width=%272.25%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E");
+  }
 }
 
 /* Custom Cursor Setup */
 @media (pointer: fine) {
-  html, body {
+  html.native-cursor,
+  html.native-cursor body {
+    cursor: auto !important;
+  }
+
+  html.native-cursor a,
+  html.native-cursor button,
+  html.native-cursor [role="button"],
+  html.native-cursor label {
+    cursor: pointer !important;
+  }
+
+  html.native-cursor input,
+  html.native-cursor textarea,
+  html.native-cursor select {
+    cursor: text !important;
+    caret-color: #121212;
+  }
+
+  html:not(.native-cursor),
+  html:not(.native-cursor) body {
     cursor: none !important;
   }
-  a, button, [role="button"] {
+
+  html:not(.native-cursor) a,
+  html:not(.native-cursor) button,
+  html:not(.native-cursor) [role="button"] {
     cursor: none !important;
+  }
+
+  html:not(.native-cursor) input,
+  html:not(.native-cursor) textarea,
+  html:not(.native-cursor) select {
+    cursor: text !important;
+    caret-color: #121212;
   }
 }
 

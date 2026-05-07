@@ -2,13 +2,19 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { ChevronRight, CreditCard, Truck, ShieldCheck, ArrowLeft, Smartphone, Wallet } from 'lucide-react';
+import { ChevronRight, CreditCard, Truck, ShieldCheck, ArrowLeft, Smartphone } from 'lucide-react';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { generateOfflineOrderPlaceholder } from '../lib/orderNumber';
+import { getEffectivePrices } from '../lib/productMapper';
+import { toastError } from '../lib/appToast';
 
 const Checkout = () => {
   const { cart, getCartTotal, clearCart } = useCart();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState('cod');
-  
+  const [deliveryMethod, setDeliveryMethod] = useState('standard');
+  const [submitting, setSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -28,13 +34,79 @@ const Checkout = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate order processing
-    setTimeout(() => {
+    const total = getCartTotal();
+    const line_items = cart.map((item) => {
+      const { price, price30ml } = getEffectivePrices(item);
+      const unit = item.size === '30ml' ? price30ml : price;
+      return {
+        product_slug: item.id,
+        product_title: item.name,
+        size: item.size,
+        quantity: item.quantity,
+        unit_price: unit,
+        line_total: unit * item.quantity,
+        image: item.image || null,
+      };
+    });
+
+    if (!isSupabaseConfigured || !supabase) {
       clearCart();
-      navigate('/order-success');
-    }, 1500);
+      navigate('/order-success', {
+        state: {
+          orderNumber: generateOfflineOrderPlaceholder(),
+          offline: true,
+          fromCheckout: true,
+        },
+      });
+      return;
+    }
+
+    setSubmitting(true);
+    const { data: row, error } = await supabase
+      .from('orders')
+      .insert({
+        status: 'pending',
+        fulfillment_status: 'unfulfilled',
+        delivery_status: 'pending',
+        delivery_method: deliveryMethod,
+        payment_method: paymentMethod,
+        email: formData.email.trim(),
+        first_name: formData.firstName.trim(),
+        last_name: formData.lastName.trim(),
+        phone: formData.phone.trim(),
+        address_line: formData.address.trim(),
+        city: formData.city.trim(),
+        postal_code: formData.postalCode.trim(),
+        line_items,
+        subtotal: total,
+        shipping_total: 0,
+        total,
+        currency: 'PKR',
+      })
+      .select('id, order_number')
+      .single();
+
+    setSubmitting(false);
+
+    if (error) {
+      console.error('[checkout]', error);
+      toastError(
+        'Could not save order',
+        `${error.message} Your cart is unchanged — please try again or contact support.`
+      );
+      return;
+    }
+
+    clearCart();
+    navigate('/order-success', {
+      state: {
+        orderNumber: row?.order_number,
+        orderId: row?.id,
+        fromCheckout: true,
+      },
+    });
   };
 
   return (
@@ -127,6 +199,32 @@ const Checkout = () => {
               />
             </section>
 
+            {/* Delivery */}
+            <section className="space-y-8 bg-white p-10 md:p-14 rounded-3xl border border-dark/5 shadow-sm">
+              <h2 className="text-2xl font-serif">Delivery method</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  { id: 'standard', title: 'Standard shipping', sub: 'Free nationwide' },
+                  { id: 'express', title: 'Express', sub: 'Faster dispatch' },
+                  { id: 'pickup', title: 'Studio pickup', sub: 'Collect in person' },
+                ].map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setDeliveryMethod(opt.id)}
+                    className={`text-left p-6 rounded-2xl border transition-all duration-300 ${
+                      deliveryMethod === opt.id
+                        ? 'border-dark bg-dark/5'
+                        : 'border-dark/5 hover:border-dark/20'
+                    }`}
+                  >
+                    <p className="text-sm font-medium">{opt.title}</p>
+                    <p className="text-[11px] text-dark/45 mt-2">{opt.sub}</p>
+                  </button>
+                ))}
+              </div>
+            </section>
+
             {/* Payment Method */}
             <section className="space-y-8 bg-white p-10 md:p-14 rounded-3xl border border-dark/5 shadow-sm">
               <div>
@@ -185,9 +283,10 @@ const Checkout = () => {
             <div className="flex flex-col md:flex-row items-center gap-8 pt-6">
               <button 
                 type="submit"
-                className="w-full md:w-auto px-16 py-6 bg-dark text-white text-[11px] uppercase tracking-[0.4em] font-bold rounded-full hover:bg-gold transition-all duration-500 shadow-xl"
+                disabled={submitting}
+                className="w-full md:w-auto px-16 py-6 bg-dark text-white text-[11px] uppercase tracking-[0.4em] font-bold rounded-full hover:bg-gold transition-all duration-500 shadow-xl disabled:opacity-50 disabled:pointer-events-none"
               >
-                Complete Order
+                {submitting ? 'Placing order…' : 'Complete Order'}
               </button>
               <Link to="/cart" className="flex items-center gap-3 text-[10px] uppercase tracking-widest text-dark/40 font-bold hover:text-dark transition-colors">
                 <ArrowLeft className="w-4 h-4" />
@@ -201,7 +300,10 @@ const Checkout = () => {
             <div className="bg-white p-10 md:p-14 rounded-3xl border border-dark/5 sticky top-32">
               <h2 className="text-2xl font-serif mb-10">Order Summary</h2>
               
-              <div className="space-y-8 mb-10 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
+              <div
+                data-lenis-prevent
+                className="space-y-8 mb-10 max-h-[400px] overflow-y-auto overscroll-contain touch-pan-y pr-4 custom-scrollbar"
+              >
                 {cart.map((item) => (
                   <div key={`${item.id}-${item.size}`} className="flex items-center gap-6">
                     <div className="relative w-20 h-24 bg-offwhite rounded-xl overflow-hidden shrink-0 border border-dark/5">

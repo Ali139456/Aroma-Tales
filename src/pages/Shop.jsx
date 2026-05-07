@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { products } from '../data/products';
+import { useProducts } from '../context/ProductsContext';
 import { useCart } from '../context/CartContext';
+import { getEffectivePrices, getTrackedStock, cartUnitsForProduct } from '../lib/productMapper';
 import { 
   Search, 
   ChevronDown, 
@@ -12,29 +13,47 @@ import {
   ShoppingBag,
   Star,
   Zap,
-  ArrowUpRight
+  ArrowUpRight,
+  Check,
 } from 'lucide-react';
 
 const Shop = () => {
-  const { addToCart } = useCart();
+  const { products, loading: productsLoading } = useProducts();
+  const { addToCart, cart } = useCart();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const initialQuery = queryParams.get('q') || '';
   const initialCat = queryParams.get('cat') || 'All';
+  const initialProducts = queryParams.get('products') || '';
 
   const [activeCategory, setActiveCategory] = useState(initialCat);
   const [sortBy, setSortBy] = useState('Featured');
   const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [productsSlugFilter, setProductsSlugFilter] = useState(initialProducts);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [addedItems, setAddedItems] = useState({});
 
   // Effect to update state when URL changes
   useEffect(() => {
-    const q = queryParams.get('q');
-    const cat = queryParams.get('cat');
+    const params = new URLSearchParams(location.search);
+    const q = params.get('q');
+    const cat = params.get('cat');
+    const products = params.get('products');
     if (q !== null) setSearchQuery(q);
     if (cat !== null) setActiveCategory(cat);
+    if (products !== null) setProductsSlugFilter(products);
   }, [location.search]);
+
+  const productSlugSet = useMemo(() => {
+    if (!productsSlugFilter.trim()) return null;
+    const set = new Set(
+      productsSlugFilter
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+    );
+    return set.size ? set : null;
+  }, [productsSlugFilter]);
 
   const categories = ['All', 'Mens', 'Womens', 'Unisex'];
   const sortOptions = ['Featured', 'Price: Low to High', 'Price: High to Low', 'Newest'];
@@ -42,36 +61,40 @@ const Shop = () => {
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    // Filter by Category
-    if (activeCategory !== 'All') {
-      result = result.filter(p => p.category === activeCategory);
+    if (productSlugSet && productSlugSet.size > 0) {
+      result = result.filter((p) => productSlugSet.has(p.id));
+    } else if (activeCategory !== 'All') {
+      result = result.filter((p) => p.category === activeCategory);
     }
 
     // Search filter
     if (searchQuery) {
-      result = result.filter(p => 
+      result = result.filter((p) =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchQuery.toLowerCase())
+        (p.description || '').toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Sort
+    // Sort (use effective 50ml price when sale active)
     if (sortBy === 'Price: Low to High') {
-      result.sort((a, b) => a.price - b.price);
+      result.sort((a, b) => getEffectivePrices(a).price - getEffectivePrices(b).price);
     } else if (sortBy === 'Price: High to Low') {
-      result.sort((a, b) => b.price - a.price);
+      result.sort((a, b) => getEffectivePrices(b).price - getEffectivePrices(a).price);
     }
 
     return result;
-  }, [activeCategory, sortBy, searchQuery]);
+  }, [products, activeCategory, sortBy, searchQuery, productSlugSet]);
 
   const handleQuickAdd = (product, e) => {
     e.preventDefault();
     e.stopPropagation();
+    const cap = getTrackedStock(product);
+    const used = cartUnitsForProduct(cart, product.id);
+    if (cap !== null && used >= cap) return;
     addToCart(product, '30ml');
-    setAddedItems(prev => ({ ...prev, [product.id]: true }));
+    setAddedItems((prev) => ({ ...prev, [product.id]: true }));
     setTimeout(() => {
-      setAddedItems(prev => ({ ...prev, [product.id]: false }));
+      setAddedItems((prev) => ({ ...prev, [product.id]: false }));
     }, 2000);
   };
 
@@ -91,6 +114,11 @@ const Shop = () => {
              <p className="text-dark/50 text-lg font-light leading-relaxed">
                Explore our curated selection of provocation extracts. Each scent is a hand-poured story, designed to linger in the memory long after the wearer has left the room.
              </p>
+             {productSlugSet && productSlugSet.size > 0 && (
+               <p className="text-[11px] uppercase tracking-[0.28em] font-bold text-gold mt-5">
+                 Showing {productSlugSet.size} curated {productSlugSet.size === 1 ? 'fragrance' : 'fragrances'} from this collection.
+               </p>
+             )}
           </div>
           
           <div className="flex flex-wrap items-center gap-6 pb-2">
@@ -140,7 +168,7 @@ const Shop = () => {
                  </div>
               </div>
               <span className="text-[10px] uppercase tracking-widest font-bold text-dark/20">
-                {filteredProducts.length} Results
+                {productsLoading ? '…' : filteredProducts.length} Results
               </span>
            </div>
         </div>
@@ -164,6 +192,8 @@ const Shop = () => {
                         <img 
                           src={product.image} 
                           alt={product.name} 
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110"
                         />
                         
@@ -187,9 +217,15 @@ const Shop = () => {
 
                         {/* Quick Add Button */}
                         <div className="absolute bottom-6 left-6 right-6">
-                           <button 
+                           <button
+                             type="button"
+                             disabled={(() => {
+                               const cap = getTrackedStock(product);
+                               const used = cartUnitsForProduct(cart, product.id);
+                               return cap !== null && (cap === 0 || used >= cap);
+                             })()}
                              onClick={(e) => handleQuickAdd(product, e)}
-                             className={`w-full py-4 rounded-2xl text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-500 flex items-center justify-center gap-3 shadow-2xl ${addedItems[product.id] ? 'bg-gold text-white translate-y-0 opacity-100' : 'bg-dark text-white translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'}`}
+                             className={`w-full py-4 rounded-2xl text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-500 flex items-center justify-center gap-3 shadow-2xl disabled:opacity-40 disabled:pointer-events-none disabled:hover:translate-y-10 ${addedItems[product.id] ? 'bg-gold text-white translate-y-0 opacity-100' : 'bg-dark text-white translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'}`}
                            >
                               {addedItems[product.id] ? (
                                 <>
@@ -212,8 +248,22 @@ const Shop = () => {
                         <p className="text-[10px] uppercase tracking-[0.3em] text-dark/40 font-bold max-w-[200px] mx-auto line-clamp-1">
                           {product.notes?.top || 'Provocative Extract'}
                         </p>
-                        <div className="flex items-center justify-center gap-4 pt-2">
-                           <span className="text-lg font-medium text-dark/90">Rs.{product.price30ml}</span>
+                        <div className="flex items-center justify-center gap-3 pt-2 flex-wrap">
+                           {(() => {
+                             const eff = getEffectivePrices(product);
+                             return (
+                               <>
+                                 {eff.onSale && (
+                                   <span className="text-sm text-dark/35 line-through tabular-nums">
+                                     Rs.{product.price30ml}
+                                   </span>
+                                 )}
+                                 <span className="text-lg font-medium text-dark/90 tabular-nums">
+                                   Rs.{eff.price30ml}
+                                 </span>
+                               </>
+                             );
+                           })()}
                         </div>
                      </div>
                   </Link>

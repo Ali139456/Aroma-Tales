@@ -1,0 +1,4 @@
+# Minimal Supabase CLI config. Extend via `supabase init` if needed.
+
+[functions.notify-new-order]
+verify_jwt = false

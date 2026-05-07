@@ -169,25 +169,5 @@ export const products = [
       sillage: 'Moderate',
       lasting: '8-10 hours'
     }
-  },
-  {
-    id: 'royal',
-    name: 'Royal',
-    category: 'Mens',
-    price: 2500, // 50ml
-    price30ml: 2200,
-    isBestSeller: true,
-    image: '/black-stone.jpg',
-    description: 'Royal is a majestic and commanding fragrance that exudes power and grace. The top notes of Bergamot and Grapefruit provide a crisp and regal opening.',
-    notes: {
-      top: 'Bergamot, Grapefruit',
-      heart: 'Cedar, Jasmine',
-      base: 'Amber, Musk'
-    },
-    specs: {
-      concentration: '40% (Extrait De Parfum)',
-      sillage: 'Strong',
-      lasting: '12-14 hours'
-    }
   }
 ];

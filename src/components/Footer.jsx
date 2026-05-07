@@ -1,6 +1,52 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Globe, Heart, MessageSquare, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+
+const iconClass = 'w-5 h-5';
+
+function IconInstagram({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="17.5" cy="6.5" r="1.25" fill="currentColor" />
+    </svg>
+  );
+}
+
+function IconFacebook({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M24 12.073C24 5.446 18.627 0 12 0S0 5.446 0 12.073c0 5.989 4.435 10.927 10.205 11.827v-8.316H7.078v-3.462h3.127V9.413c0-3.096 1.884-4.812 4.682-4.812 1.337 0 2.736.239 2.736.239v3.005h-1.539c-1.516 0-1.987.941-1.987 1.907v2.289h3.379l-.54 3.462h-2.839v8.316C19.565 23 24 18.062 24 12.073z" />
+    </svg>
+  );
+}
+
+function IconTikTok({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
+    </svg>
+  );
+}
+
+const socialLinks = [
+  {
+    href: 'https://www.instagram.com/aromatalesofficial/',
+    label: 'Aroma Tales on Instagram',
+    Icon: IconInstagram,
+  },
+  {
+    href: 'https://www.tiktok.com/@aromatales.official',
+    label: 'Aroma Tales on TikTok',
+    Icon: IconTikTok,
+  },
+  {
+    href: 'https://www.facebook.com/people/Aroma-Tales/61565297351838/',
+    label: 'Aroma Tales on Facebook',
+    Icon: IconFacebook,
+  },
+];
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -26,19 +72,17 @@ const Footer = () => {
             <p className="text-dark/50 text-lg font-light leading-relaxed max-w-sm">
               An olfactory atelier creating provocative extracts that capture the poetry of nature in hand-poured vessels.
             </p>
-            <div className="flex gap-8">
-              {[
-                { icon: Globe, label: 'Website' },
-                { icon: Heart, label: 'Community' },
-                { icon: MessageSquare, label: 'Connect' }
-              ].map((social) => (
-                <a 
-                  key={social.label} 
-                  href="#" 
+            <div className="flex flex-wrap gap-4">
+              {socialLinks.map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-12 h-12 rounded-full border border-dark/10 flex items-center justify-center text-dark/40 hover:bg-dark hover:text-white hover:border-dark transition-all duration-300"
-                  aria-label={social.label}
+                  aria-label={label}
                 >
-                  <social.icon className="w-5 h-5" />
+                  <Icon className={iconClass} />
                 </a>
               ))}
             </div>
@@ -52,6 +96,14 @@ const Footer = () => {
                 <li><Link to="/#collections" className="text-sm text-dark/60 hover:text-dark transition-colors">Collections</Link></li>
                 <li><Link to="/#collections" className="text-sm text-dark/60 hover:text-dark transition-colors">New Arrivals</Link></li>
                 <li><Link to="/#collections" className="text-sm text-dark/60 hover:text-dark transition-colors">Best Sellers</Link></li>
+                <li>
+                  <Link
+                    to="/admin/login"
+                    className="text-sm font-medium text-red-600 hover:text-red-700 transition-colors"
+                  >
+                    Admin login
+                  </Link>
+                </li>
               </ul>
             </div>
             
