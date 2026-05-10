@@ -5,7 +5,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="page--home relative min-h-[88vh] sm:min-h-[90vh] w-full flex items-center bg-white overflow-hidden pt-28 pb-14 sm:pt-32 sm:pb-16 md:pt-24 md:pb-0">
+    <section className="page--home relative min-h-[88vh] sm:min-h-[90vh] w-full flex items-center bg-white overflow-hidden pt-32 pb-20 sm:pt-32 sm:pb-16 md:pt-24 md:pb-0">
       {/* Background Color Blooms - Animated */}
       <motion.div 
         animate={{ 
@@ -115,7 +115,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex justify-center lg:justify-start w-full"
+            className="flex justify-center lg:justify-start w-full mt-8 sm:mt-0 mb-14 sm:mb-0"
           >
             <Link to="/shop">
               <button className="w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 border border-dark rounded-full text-base sm:text-lg font-medium hover:bg-dark hover:text-white transition-all duration-300 min-h-[48px]">
@@ -125,8 +125,8 @@ const Hero = () => {
           </motion.div>
         </div>
 
-        {/* Hero visual — first on mobile */}
-        <div className="w-full lg:w-1/2 flex justify-center items-center relative order-1 lg:order-2 max-w-[min(100%,420px)] lg:max-w-none mx-auto lg:mx-0">
+        {/* Hero visual — first on mobile; extra top margin below fixed nav + announcement */}
+        <div className="w-full lg:w-1/2 flex justify-center items-center relative order-1 lg:order-2 max-w-[min(100%,420px)] lg:max-w-none mx-auto lg:mx-0 mt-14 sm:mt-0">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ 
@@ -159,8 +159,8 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Decorative Discover Text (optional, but keep it minimal as requested) */}
-      <div className="absolute bottom-6 sm:bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 sm:gap-4 opacity-25 md:opacity-20">
+      {/* Decorative Discover Text — inset more on mobile so it clears Shop Now + safe area */}
+      <div className="absolute bottom-12 sm:bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 sm:gap-4 opacity-25 md:opacity-20">
         <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Discover</span>
         <div className="w-[1px] h-8 sm:h-10 bg-dark"></div>
       </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { BUSINESS_EMAIL, BUSINESS_PHONE_DISPLAY, BUSINESS_PHONE_E164 } from '../lib/contactInfo';
+import { ArrowUpRight, Mail, Phone } from 'lucide-react';
 
 const iconClass = 'w-5 h-5';
 
@@ -88,8 +89,8 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Navigation */}
-          <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12">
+          {/* Navigation + Contact — 2 columns on mobile, 4 on large screens */}
+          <div className="lg:col-span-7 grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 sm:gap-x-8 sm:gap-y-12 lg:gap-10">
             <div className="space-y-8">
               <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-dark/30">Archives</p>
               <ul className="space-y-6">
@@ -116,7 +117,31 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div className="space-y-8 col-span-2 md:col-span-1">
+            <div className="space-y-8">
+              <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-dark/30">Contact</p>
+              <ul className="space-y-5">
+                <li>
+                  <a
+                    href={`tel:${BUSINESS_PHONE_E164.replace(/\s/g, '')}`}
+                    className="flex items-start gap-3 text-sm text-dark/65 hover:text-dark transition-colors group"
+                  >
+                    <Phone className="w-4 h-4 mt-0.5 shrink-0 text-dark/35 group-hover:text-gold transition-colors" strokeWidth={1.5} aria-hidden />
+                    <span className="font-medium tracking-wide">{BUSINESS_PHONE_DISPLAY}</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:${BUSINESS_EMAIL}`}
+                    className="flex items-start gap-3 text-sm text-dark/65 hover:text-dark transition-colors group break-all"
+                  >
+                    <Mail className="w-4 h-4 mt-0.5 shrink-0 text-dark/35 group-hover:text-gold transition-colors" strokeWidth={1.5} aria-hidden />
+                    <span>{BUSINESS_EMAIL}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-8 lg:col-span-1">
               <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-dark/30">Newsletter</p>
               <div className="relative group">
                 <input 

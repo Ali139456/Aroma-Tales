@@ -6,6 +6,7 @@ import { ChevronRight, CreditCard, Truck, ShieldCheck, ArrowLeft, Smartphone } f
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { generateOfflineOrderPlaceholder } from '../lib/orderNumber';
 import { getEffectivePrices } from '../lib/productMapper';
+import { BUSINESS_PHONE_DISPLAY } from '../lib/contactInfo';
 import { saveOrderSuccessState } from '../lib/orderSuccessState';
 import { toastError, toastSuccess } from '../lib/appToast';
 
@@ -292,7 +293,8 @@ const Checkout = () => {
                     Please send the total amount to: <br/>
                     <strong className="text-dark">Easypaisa: 0312-3456789</strong> <br/>
                     <strong className="text-dark">Jazzcash: 0300-1234567</strong> <br/>
-                    After payment, please share the screenshot on WhatsApp with your Order ID.
+                    After payment, WhatsApp your screenshot to{' '}
+                    <strong className="text-dark">{BUSINESS_PHONE_DISPLAY}</strong> with your Order ID.
                   </motion.div>
                 )}
               </div>

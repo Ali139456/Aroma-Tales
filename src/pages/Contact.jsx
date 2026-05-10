@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { BUSINESS_EMAIL, BUSINESS_PHONE_DISPLAY, BUSINESS_PHONE_E164 } from '../lib/contactInfo';
 
 const Contact = () => {
   return (
@@ -28,7 +29,12 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-dark/40 mb-1">Email</p>
-                  <p className="text-lg text-dark">atelier@aromatales.com</p>
+                  <a
+                    href={`mailto:${BUSINESS_EMAIL}`}
+                    className="text-lg text-dark hover:text-gold transition-colors"
+                  >
+                    {BUSINESS_EMAIL}
+                  </a>
                 </div>
               </div>
 
@@ -38,7 +44,12 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-dark/40 mb-1">Phone</p>
-                  <p className="text-lg text-dark">+1 (234) 567-890</p>
+                  <a
+                    href={`tel:${BUSINESS_PHONE_E164.replace(/\s/g, '')}`}
+                    className="text-lg text-dark hover:text-gold transition-colors"
+                  >
+                    {BUSINESS_PHONE_DISPLAY}
+                  </a>
                 </div>
               </div>
 

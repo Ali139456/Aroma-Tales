@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useProducts } from '../context/ProductsContext';
 import { getEffectivePrices, getTrackedStock, cartUnitsForProduct } from '../lib/productMapper';
 import { useCart } from '../context/CartContext';
+import { BUSINESS_WHATSAPP_DIGITS } from '../lib/contactInfo';
 import { 
   ShoppingBag, 
   ChevronRight, 
@@ -91,7 +92,10 @@ const ProductDetail = () => {
 
   const handleWhatsAppOrder = () => {
     const message = `Hi Aroma Tales! I'd like to order ${quantity}x ${product.name} (${selectedSize}).`;
-    window.open(`https://wa.me/1234567890?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(
+      `https://wa.me/${BUSINESS_WHATSAPP_DIGITS}?text=${encodeURIComponent(message)}`,
+      '_blank',
+    );
   };
 
   if (loading) {

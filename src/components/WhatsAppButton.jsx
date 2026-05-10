@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
+import { BUSINESS_WHATSAPP_DIGITS } from '../lib/contactInfo';
 
 const WhatsAppButton = () => {
-  const whatsappNumber = "+1234567890"; // Replace with actual number
   const message = "Hi Aroma Tales, I'm interested in your fragrances!";
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://wa.me/${BUSINESS_WHATSAPP_DIGITS}?text=${encodeURIComponent(message)}`;
 
   return (
     <motion.a
