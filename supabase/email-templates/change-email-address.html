@@ -1,6 +1,6 @@
 <!--
-  Authentication → Email Templates → "Reset password"
-  Subject: Reset your password · Aroma Tales
+  Authentication → Email Templates → "Change email address"
+  Subject: Confirm your new email · Aroma Tales
   Paste body only: from <!DOCTYPE through </html> (skip this comment).
 -->
 <!DOCTYPE html>
@@ -8,11 +8,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reset password</title>
+  <title>Confirm email change</title>
 </head>
 <body style="margin:0;padding:0;background-color:#ececec;-webkit-text-size-adjust:100%;">
   <div style="display:none;font-size:1px;color:#ececec;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">
-    Reset your Aroma Tales password with the secure link inside.
+    Confirm your new email address for your Aroma Tales account.
   </div>
   <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color:#ececec;border-collapse:collapse;">
     <tr>
@@ -21,7 +21,7 @@
           <tr>
             <td style="background-color:#121212;padding:32px 28px;text-align:center;">
               <p style="margin:0 0 14px;color:#B8860B;font-size:10px;letter-spacing:0.42em;text-transform:uppercase;font-weight:700;">Aroma Tales</p>
-              <h1 style="margin:0;color:#ffffff;font-family:Georgia,'Times New Roman',serif;font-size:28px;font-weight:400;line-height:1.25;">Reset your password</h1>
+              <h1 style="margin:0;color:#ffffff;font-family:Georgia,'Times New Roman',serif;font-size:28px;font-weight:400;line-height:1.25;">Confirm new email</h1>
             </td>
           </tr>
           <tr>
@@ -29,13 +29,16 @@
           </tr>
           <tr>
             <td style="padding:36px 32px 8px;">
-              <p style="margin:0 0 24px;color:#3d3d3d;font-size:15px;line-height:1.65;">
-                We received a request to reset the password for <strong style="color:#121212;">{{ .Email }}</strong>. Choose a new password using the secure link below.
+              <p style="margin:0 0 18px;color:#3d3d3d;font-size:15px;line-height:1.65;">
+                You asked to change the email on your account from <strong style="color:#121212;">{{ .OldEmail }}</strong> to <strong style="color:#121212;">{{ .NewEmail }}</strong>.
+              </p>
+              <p style="margin:0 0 24px;color:#3d3d3d;font-size:14px;line-height:1.6;">
+                Tap the button to confirm this change.
               </p>
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
                 <tr>
                   <td align="center" style="border-radius:999px;background-color:#121212;">
-                    <a href="{{ .ConfirmationURL }}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:17px 40px;color:#ffffff;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;">Reset password</a>
+                    <a href="{{ .ConfirmationURL }}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:17px 40px;color:#ffffff;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;">Confirm new email</a>
                   </td>
                 </tr>
               </table>
@@ -49,7 +52,7 @@
           </tr>
           <tr>
             <td style="padding:0 32px 36px;">
-              <p style="margin:0;color:#b0b0b0;font-size:11px;line-height:1.55;text-align:center;">If you didn&rsquo;t ask for a reset, ignore this message — your password stays the same.</p>
+              <p style="margin:0;color:#b0b0b0;font-size:11px;line-height:1.55;text-align:center;">If you didn&rsquo;t request this change, contact support right away.</p>
             </td>
           </tr>
         </table>

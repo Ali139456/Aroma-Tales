@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { User } from 'lucide-react';
+import { Mail, User } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { PasswordField } from '../components/PasswordField';
 
@@ -21,11 +21,29 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
+  /** After sign-up when Supabase requires email confirmation (no session yet). */
+  const [signupAwaitingConfirmation, setSignupAwaitingConfirmation] = useState(false);
+  const [pendingConfirmEmail, setPendingConfirmEmail] = useState('');
 
   useEffect(() => {
     setError('');
     setInfo('');
+    setSignupAwaitingConfirmation(false);
+    setPendingConfirmEmail('');
   }, [mode]);
+
+  /** After email confirmation / magic link, Supabase puts tokens in the URL; pick up session and leave /auth. */
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return undefined;
+    let cancelled = false;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (cancelled || !session) return;
+      navigate('/shop', { replace: true });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
 
   const handleForgotPassword = async (emailOverride) => {
     setError('');
@@ -86,11 +104,13 @@ const Auth = () => {
       setError('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env');
       return;
     }
+    const emailTrim = signupEmail.trim();
     setLoading(true);
     const { data, error: signErr } = await supabase.auth.signUp({
-      email: signupEmail.trim(),
+      email: emailTrim,
       password: signupPassword,
       options: {
+        emailRedirectTo: `${window.location.origin}/auth`,
         data: {
           first_name: firstName.trim(),
           last_name: lastName.trim(),
@@ -106,9 +126,8 @@ const Auth = () => {
       navigate('/shop', { replace: true });
       return;
     }
-    setInfo(
-      'Account created. If email confirmation is enabled in Supabase, check your inbox before signing in.'
-    );
+    setPendingConfirmEmail(emailTrim);
+    setSignupAwaitingConfirmation(true);
   };
 
   return (
@@ -189,6 +208,42 @@ const Auth = () => {
             </p>
           )}
 
+          {mode === 'signup' && signupAwaitingConfirmation && (
+            <div
+              role="alert"
+              aria-live="polite"
+              className="mb-10 rounded-2xl border border-gold/35 bg-gold/[0.07] px-6 py-7 sm:px-8 text-center shadow-sm"
+            >
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-dark text-gold mb-4">
+                <Mail className="w-5 h-5" strokeWidth={1.75} aria-hidden />
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.35em] font-bold text-gold mb-2">Almost there</p>
+              <h2 className="font-serif text-2xl sm:text-3xl text-dark mb-3">Check your email</h2>
+              <p className="text-dark/70 text-sm font-light leading-relaxed max-w-sm mx-auto mb-1">
+                We sent a confirmation link to
+              </p>
+              <p className="text-dark font-medium text-sm break-all mb-5">{pendingConfirmEmail}</p>
+              <p className="text-dark/55 text-xs font-light leading-relaxed max-w-sm mx-auto mb-6">
+                Open the email and tap <strong className="text-dark/80 font-medium">Verify email</strong> to activate your
+                account, then sign in here. If you don&rsquo;t see it, check spam or promotions.
+              </p>
+              <button
+                type="button"
+                onClick={() => setMode('login')}
+                className="inline-flex items-center justify-center py-3.5 px-8 rounded-full bg-dark text-white text-[11px] uppercase tracking-[0.28em] font-bold hover:bg-gold transition-colors"
+              >
+                Go to sign in
+              </button>
+              <button
+                type="button"
+                onClick={() => setSignupAwaitingConfirmation(false)}
+                className="mt-4 block w-full text-center text-[11px] uppercase tracking-[0.2em] font-bold text-dark/45 hover:text-dark transition-colors"
+              >
+                Use a different email
+              </button>
+            </div>
+          )}
+
           {mode === 'login' ? (
             <form className="space-y-10" onSubmit={handleLogin}>
               <div className="space-y-4">
@@ -239,7 +294,7 @@ const Auth = () => {
                 {loading ? 'Signing in…' : 'Sign in'}
               </button>
             </form>
-          ) : (
+          ) : signupAwaitingConfirmation ? null : (
             <form className="space-y-10" onSubmit={handleSignup}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div className="space-y-4">
