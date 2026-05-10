@@ -13,16 +13,68 @@
  * Database webhooks (same URL + Authorization: Bearer <ORDER_NOTIFY_SECRET>):
  *   - INSERT on `orders`  → new pending order: shop + customer
  *   - UPDATE on `orders`  → customer lifecycle (confirm / ship / deliver / cancel); draft→pending → shop + customer
+ *
+ * Troubleshooting: order emails are API “Sending” in Resend (not “Receiving”). If nothing appears there,
+ * check Edge Function logs, webhook URL + INSERT on `orders`, and that the webhook header matches
+ * ORDER_NOTIFY_SECRET (trimmed; no extra newline after Bearer).
  */
 
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 
-const RESEND_KEY = Deno.env.get('RESEND_API_KEY');
-const NOTIFY_SECRET = Deno.env.get('ORDER_NOTIFY_SECRET');
-const SHOP_TO = Deno.env.get('SHOP_NOTIFY_EMAIL') ?? 'info.aromatales@gmail.com';
-const FROM =
-  Deno.env.get('RESEND_FROM') ?? 'Aroma Tales <onboarding@resend.dev>';
+const RESEND_KEY = (Deno.env.get('RESEND_API_KEY') ?? '').trim();
+const NOTIFY_SECRET = (Deno.env.get('ORDER_NOTIFY_SECRET') ?? '').trim();
+const SHOP_TO = (Deno.env.get('SHOP_NOTIFY_EMAIL') ?? 'info.aromatales@gmail.com').trim();
+const FROM = (Deno.env.get('RESEND_FROM') ?? 'Aroma Tales <onboarding@resend.dev>').trim();
 const STORE_URL = (Deno.env.get('STORE_URL') ?? 'https://aromatales.shop').trim().replace(/\/$/, '');
+
+type DbWebhookPayload = {
+  type?: string;
+  record?: Record<string, unknown>;
+  old_record?: Record<string, unknown> | null;
+};
+
+/** Normalize Supabase DB webhook JSON (and a few edge shapes). */
+function parseDbWebhook(raw: unknown): DbWebhookPayload {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+  const o = raw as Record<string, unknown>;
+
+  if (o.record && typeof o.record === 'object' && !Array.isArray(o.record)) {
+    const old = o.old_record;
+    return {
+      type: typeof o.type === 'string' ? o.type : undefined,
+      record: o.record as Record<string, unknown>,
+      old_record:
+        old && typeof old === 'object' && !Array.isArray(old)
+          ? (old as Record<string, unknown>)
+          : null,
+    };
+  }
+
+  if (typeof o.record === 'string') {
+    try {
+      const record = JSON.parse(o.record) as Record<string, unknown>;
+      return {
+        type: typeof o.type === 'string' ? o.type : undefined,
+        record,
+        old_record: null,
+      };
+    } catch {
+      return {};
+    }
+  }
+
+  if (o.order_number !== undefined || o.id !== undefined) {
+    return { type: 'INSERT', record: o as Record<string, unknown>, old_record: null };
+  }
+
+  return {};
+}
+
+function bearerToken(authHeader: string): string {
+  const h = (authHeader ?? '').trim();
+  if (!/^Bearer\s+/i.test(h)) return '';
+  return h.replace(/^Bearer\s+/i, '').trim();
+}
 
 function esc(s: string) {
   return s
@@ -151,21 +203,18 @@ Deno.serve(async (req: Request) => {
   }
 
   const auth = req.headers.get('Authorization') ?? '';
-  const expected = NOTIFY_SECRET ? `Bearer ${NOTIFY_SECRET}` : '';
-  if (!NOTIFY_SECRET || auth !== expected) {
+  const token = bearerToken(auth);
+  if (!NOTIFY_SECRET || token !== NOTIFY_SECRET) {
+    console.warn('notify-new-order: unauthorized (webhook Bearer must match ORDER_NOTIFY_SECRET, both trimmed)');
     return new Response(JSON.stringify({ error: 'unauthorized' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
-  let payload: {
-    type?: string;
-    record?: Record<string, unknown>;
-    old_record?: Record<string, unknown> | null;
-  };
+  let raw: unknown;
   try {
-    payload = await req.json();
+    raw = await req.json();
   } catch {
     return new Response(JSON.stringify({ error: 'invalid json' }), {
       status: 400,
@@ -173,13 +222,27 @@ Deno.serve(async (req: Request) => {
     });
   }
 
+  const payload = parseDbWebhook(raw);
   const record = payload.record;
   if (!record || typeof record !== 'object') {
+    console.warn(
+      'notify-new-order: missing record in payload; keys:',
+      raw && typeof raw === 'object' ? Object.keys(raw as object).join(',') : typeof raw,
+    );
     return new Response(JSON.stringify({ error: 'missing record' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
   }
+
+  console.info(
+    'notify-new-order:',
+    JSON.stringify({
+      type: payload.type ?? 'INSERT',
+      table: (raw as Record<string, unknown>)?.table,
+      order_number: record.order_number,
+    }),
+  );
 
   if (!RESEND_KEY) {
     console.error('notify-new-order: RESEND_API_KEY not set');
