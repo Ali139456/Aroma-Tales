@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -6,11 +6,14 @@ import { ChevronRight, CreditCard, Truck, ShieldCheck, ArrowLeft, Smartphone } f
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { generateOfflineOrderPlaceholder } from '../lib/orderNumber';
 import { getEffectivePrices } from '../lib/productMapper';
-import { toastError } from '../lib/appToast';
+import { saveOrderSuccessState } from '../lib/orderSuccessState';
+import { toastError, toastSuccess } from '../lib/appToast';
 
 const Checkout = () => {
   const { cart, getCartTotal, clearCart } = useCart();
   const navigate = useNavigate();
+  /** Prevents empty-cart redirect to /cart while navigating to order success after clearCart(). */
+  const orderSuccessPendingRef = useRef(false);
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [deliveryMethod, setDeliveryMethod] = useState('standard');
   const [submitting, setSubmitting] = useState(false);
@@ -25,7 +28,7 @@ const Checkout = () => {
     phone: ''
   });
 
-  if (cart.length === 0) {
+  if (cart.length === 0 && !orderSuccessPendingRef.current) {
     navigate('/cart');
     return null;
   }
@@ -52,13 +55,19 @@ const Checkout = () => {
     });
 
     if (!isSupabaseConfigured || !supabase) {
+      orderSuccessPendingRef.current = true;
+      const orderNumber = generateOfflineOrderPlaceholder();
       clearCart();
+      toastSuccess('Your order has been placed', `Reference ${orderNumber.startsWith('#') ? orderNumber : `#${orderNumber}`}`);
+      const offlineState = {
+        orderNumber,
+        offline: true,
+        fromCheckout: true,
+      };
+      saveOrderSuccessState(offlineState);
       navigate('/order-success', {
-        state: {
-          orderNumber: generateOfflineOrderPlaceholder(),
-          offline: true,
-          fromCheckout: true,
-        },
+        replace: true,
+        state: offlineState,
       });
       return;
     }
@@ -99,13 +108,22 @@ const Checkout = () => {
       return;
     }
 
+    orderSuccessPendingRef.current = true;
+    const orderNumber = row?.order_number;
     clearCart();
+    toastSuccess(
+      'Your order has been placed',
+      orderNumber ? `Order #${orderNumber}` : 'We will email you a confirmation shortly.',
+    );
+    const successState = {
+      orderNumber,
+      orderId: row?.id,
+      fromCheckout: true,
+    };
+    saveOrderSuccessState(successState);
     navigate('/order-success', {
-      state: {
-        orderNumber: row?.order_number,
-        orderId: row?.id,
-        fromCheckout: true,
-      },
+      replace: true,
+      state: successState,
     });
   };
 

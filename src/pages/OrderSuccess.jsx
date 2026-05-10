@@ -2,26 +2,26 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, CheckCircle, Home, Package } from 'lucide-react';
+import { resolveOrderSuccessPayload } from '../lib/orderSuccessState';
 
 const OrderSuccess = () => {
   const location = useLocation();
-  const fromCheckout = Boolean(location.state?.fromCheckout);
-  const offlineDemo = Boolean(location.state?.offline);
+  const payload = useMemo(
+    () => resolveOrderSuccessPayload(location.state),
+    [location.state],
+  );
+  const fromCheckout = Boolean(payload.fromCheckout);
+  const offlineDemo = Boolean(payload.offline);
 
   const [celebrateOpen, setCelebrateOpen] = useState(fromCheckout);
 
   const displayOrder = useMemo(() => {
-    const raw = location.state?.orderNumber;
-    if (typeof raw === 'string' && raw.trim()) {
-      const t = raw.trim();
-      return t.startsWith('#') ? t : `#${t}`;
-    }
-    return null;
-  }, [location.state]);
-
-  useEffect(() => {
-    setCelebrateOpen(fromCheckout);
-  }, [fromCheckout]);
+    const raw = payload?.orderNumber;
+    if (raw === undefined || raw === null) return null;
+    const t = String(raw).trim();
+    if (!t) return null;
+    return t.startsWith('#') ? t : `#${t}`;
+  }, [payload]);
 
   useEffect(() => {
     if (!celebrateOpen) return;
@@ -51,7 +51,7 @@ const OrderSuccess = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 md:p-10"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-6 md:p-10"
             role="presentation"
           >
             <button
@@ -66,7 +66,7 @@ const OrderSuccess = () => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.98 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="order-success-modal relative z-[1] w-full max-w-[440px] rounded-[2rem] border border-dark/8 bg-white px-6 py-10 sm:px-10 sm:py-12 md:px-12 md:py-14 text-center shadow-[0_24px_80px_-12px_rgba(18,18,18,0.25)] max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
+              className="order-success-modal relative z-[201] w-full max-w-[440px] rounded-[2rem] border border-dark/8 bg-white px-6 py-10 sm:px-10 sm:py-12 md:px-12 md:py-14 text-center shadow-[0_24px_80px_-12px_rgba(18,18,18,0.25)] max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
               role="dialog"
               aria-modal="true"
               aria-labelledby="order-placed-title"
