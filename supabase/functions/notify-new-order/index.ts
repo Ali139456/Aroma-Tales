@@ -22,7 +22,7 @@ const NOTIFY_SECRET = Deno.env.get('ORDER_NOTIFY_SECRET');
 const SHOP_TO = Deno.env.get('SHOP_NOTIFY_EMAIL') ?? 'info.aromatales@gmail.com';
 const FROM =
   Deno.env.get('RESEND_FROM') ?? 'Aroma Tales <onboarding@resend.dev>';
-const STORE_URL = (Deno.env.get('STORE_URL') ?? 'https://aromatales.shop').replace(/\/$/, '');
+const STORE_URL = (Deno.env.get('STORE_URL') ?? 'https://aromatales.shop').trim().replace(/\/$/, '');
 
 function esc(s: string) {
   return s

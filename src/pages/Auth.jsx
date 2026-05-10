@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, User } from 'lucide-react';
+import { appOrigin } from '../lib/appOrigin';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { PasswordField } from '../components/PasswordField';
 
@@ -59,7 +60,7 @@ const Auth = () => {
     }
     setLoading(true);
     const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth`,
+      redirectTo: `${appOrigin()}/auth`,
     });
     setLoading(false);
     if (resetErr) {
@@ -110,7 +111,7 @@ const Auth = () => {
       email: emailTrim,
       password: signupPassword,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth`,
+        emailRedirectTo: `${appOrigin()}/auth`,
         data: {
           first_name: firstName.trim(),
           last_name: lastName.trim(),
