@@ -139,7 +139,7 @@ const Hero = () => {
               scale: { duration: 1 },
               y: { duration: 6, repeat: Infinity, ease: "easeInOut" }
             }}
-            className="relative w-full max-w-[min(100vw-2rem,550px)] mx-auto lg:mx-0 aspect-square rounded-full border border-dark/10 p-2 overflow-visible"
+            className="relative w-full max-w-[min(100vw-2rem,550px)] mx-auto lg:mx-0 aspect-square rounded-full border border-dark/10 p-2 overflow-hidden lg:overflow-visible"
           >
             {/* Outer ring */}
             <div className="absolute inset-[-10px] rounded-full border border-dark/5 pointer-events-none"></div>

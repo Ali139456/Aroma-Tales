@@ -103,7 +103,7 @@ const Collections = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.8 }}
-              className="group cursor-pointer"
+              className="group cursor-pointer text-center md:text-left"
             >
               <Link to={cat.filter} className="block">
                 <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden mb-8 shadow-sm">

@@ -20,6 +20,15 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isMobileMenuOpen]);
+
   const navLinks = [
     { name: 'Shop', path: '/shop' },
     { name: 'Collections', path: '/#collections' },
@@ -70,7 +79,9 @@ const Navbar = () => {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-10 sm:top-12 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 w-[min(100%-1rem,72rem)] max-w-6xl rounded-full ${
+        className={`fixed top-10 sm:top-12 left-1/2 -translate-x-1/2 transition-all duration-500 w-[min(100%-1rem,72rem)] max-w-6xl rounded-full ${
+          isMobileMenuOpen ? 'z-[120] overflow-visible' : 'z-[100]'
+        } ${
           isScrolled
             ? 'glass-pill py-2.5 px-4 sm:py-3 sm:px-8 md:px-10'
             : 'bg-white/40 backdrop-blur-sm border border-dark/5 py-3 px-4 sm:py-5 sm:px-8 md:px-10'
@@ -151,13 +162,14 @@ const Navbar = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute top-full left-0 w-full mt-3 sm:mt-4 glass-pill rounded-[2rem] lg:hidden max-h-[min(70vh,520px)] overflow-y-auto overscroll-contain"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute left-0 top-full z-[119] mt-3 flex w-full flex-col rounded-[2rem] border border-dark/10 bg-white shadow-xl lg:hidden min-h-[calc(100svh-7.25rem)] sm:min-h-[calc(100svh-7.75rem)] overflow-y-auto overscroll-contain pb-[max(0.75rem,env(safe-area-inset-bottom))]"
           >
-            <div className="py-8 px-6 sm:py-10 sm:px-8 flex flex-col space-y-5 sm:space-y-6 items-center">
+            <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-6 py-8 sm:px-8 sm:py-10">
+              <div className="flex w-full flex-1 flex-col items-center justify-center gap-5 sm:gap-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
@@ -168,37 +180,30 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
+              </div>
               <form
                 onSubmit={(e) => {
                   handleSearch(e);
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full max-w-[280px] pt-4 mt-2 border-t border-dark/10 flex items-center gap-2"
+                className="mt-10 w-full max-w-[min(100%,320px)] shrink-0 border-t border-dark/10 pt-8 flex flex-row flex-nowrap items-center gap-2"
               >
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search fragrances…"
-                  className="flex-1 min-w-0 bg-dark/5 rounded-full px-4 py-3 text-xs font-medium text-dark placeholder:text-dark/35 outline-none border border-transparent focus:border-dark/15"
+                  className="flex-1 min-w-0 h-11 box-border rounded-full px-4 text-xs font-medium leading-none text-dark placeholder:text-dark/35 outline-none border border-transparent bg-dark/5 focus:border-dark/15"
                   aria-label="Search fragrances"
                 />
                 <button
                   type="submit"
-                  className="shrink-0 w-11 h-11 rounded-full bg-dark text-white flex items-center justify-center hover:bg-gold hover:text-dark transition-colors"
+                  className="shrink-0 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-dark text-white inline-flex items-center justify-center hover:bg-gold hover:text-dark transition-colors"
                   aria-label="Submit search"
                 >
-                  <Search className="w-4 h-4" strokeWidth={2} />
+                  <Search className="w-4 h-4 shrink-0" strokeWidth={2} />
                 </button>
               </form>
-              <Link
-                to="/auth"
-                aria-label="Account"
-                className="text-dark hover:text-gold transition-colors flex items-center justify-center p-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <User className="w-8 h-8" strokeWidth={1.5} aria-hidden />
-              </Link>
             </div>
           </motion.div>
         )}
