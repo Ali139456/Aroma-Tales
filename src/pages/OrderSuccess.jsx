@@ -23,6 +23,14 @@ const OrderSuccess = () => {
     return t.startsWith('#') ? t : `#${t}`;
   }, [payload]);
 
+  /** Plain order number for /track?order= (no #). Empty in offline demo. */
+  const trackOrderParam = useMemo(() => {
+    if (offlineDemo) return '';
+    const raw = payload?.orderNumber;
+    if (raw === undefined || raw === null) return '';
+    return String(raw).trim().replace(/^#+/, '');
+  }, [payload, offlineDemo]);
+
   useEffect(() => {
     if (!celebrateOpen) return;
     const prev = document.body.style.overflow;
@@ -102,6 +110,15 @@ const OrderSuccess = () => {
               )}
 
               <div className="flex flex-col gap-3">
+                {trackOrderParam ? (
+                  <Link
+                    to={`/track?order=${encodeURIComponent(trackOrderParam)}`}
+                    className="w-full py-4 rounded-full border border-dark/12 text-[11px] uppercase tracking-[0.28em] font-bold text-dark/80 hover:border-dark/25 hover:bg-offwhite transition-colors inline-flex items-center justify-center gap-2"
+                  >
+                    Track order
+                    <ArrowRight className="w-4 h-4" strokeWidth={2} aria-hidden />
+                  </Link>
+                ) : null}
                 <button
                   type="button"
                   onClick={() => setCelebrateOpen(false)}
@@ -157,7 +174,16 @@ const OrderSuccess = () => {
             Our team may reach out via WhatsApp if we need anything else. Keep your order reference handy.
           </p>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 pt-6">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 pt-6 flex-wrap">
+            {trackOrderParam ? (
+              <Link
+                to={`/track?order=${encodeURIComponent(trackOrderParam)}`}
+                className="w-full md:w-auto px-12 py-5 bg-white text-dark text-[11px] uppercase tracking-[0.3em] font-bold rounded-full border border-dark/10 hover:border-dark hover:bg-offwhite transition-colors flex items-center justify-center gap-3 group"
+              >
+                Track order
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" strokeWidth={1.5} aria-hidden />
+              </Link>
+            ) : null}
             <Link
               to="/"
               className="w-full md:w-auto px-12 py-5 bg-dark text-white text-[11px] uppercase tracking-[0.3em] font-bold rounded-full hover:bg-gold transition-colors flex items-center justify-center gap-3 group shadow-xl"

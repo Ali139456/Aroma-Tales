@@ -300,7 +300,15 @@ const Checkout = () => {
               </div>
             </section>
 
-            <div className="flex flex-col md:flex-row items-center gap-8 pt-6">
+            <div className="flex flex-col gap-6 pt-6">
+              <p className="text-[13px] text-dark/45 leading-relaxed max-w-xl">
+                After you complete checkout, you can{' '}
+                <Link to="/track" className="font-semibold text-dark/70 underline underline-offset-2 hover:text-dark">
+                  track your order
+                </Link>{' '}
+                anytime with your order number and email.
+              </p>
+              <div className="flex flex-col md:flex-row items-center gap-8">
               <button 
                 type="submit"
                 disabled={submitting}
@@ -312,6 +320,7 @@ const Checkout = () => {
                 <ArrowLeft className="w-4 h-4" />
                 Return to cart
               </Link>
+              </div>
             </div>
           </div>
 

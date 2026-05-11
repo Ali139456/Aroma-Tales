@@ -114,6 +114,7 @@ const Footer = () => {
                 <li><Link to="/contact" className="text-sm text-dark/60 hover:text-dark transition-colors">Our Story</Link></li>
                 <li><Link to="/contact" className="text-sm text-dark/60 hover:text-dark transition-colors">Atelier</Link></li>
                 <li><Link to="/contact" className="text-sm text-dark/60 hover:text-dark transition-colors">Contact</Link></li>
+                <li><Link to="/track" className="text-sm text-dark/60 hover:text-dark transition-colors">Track order</Link></li>
               </ul>
             </div>
 

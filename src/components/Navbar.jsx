@@ -33,6 +33,7 @@ const Navbar = () => {
     { name: 'Shop', path: '/shop' },
     { name: 'Collections', path: '/#collections' },
     { name: 'Contact', path: '/contact' },
+    { name: 'Track order', path: '/track' },
   ];
 
   const handleLinkClick = (path) => {

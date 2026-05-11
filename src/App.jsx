@@ -19,6 +19,7 @@ const Auth = lazy(() => import('./pages/Auth'))
 const Cart = lazy(() => import('./pages/Cart'))
 const Checkout = lazy(() => import('./pages/Checkout'))
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess'))
+const OrderTracking = lazy(() => import('./pages/OrderTracking'))
 const AdminLogin = lazy(() => import('./pages/AdminLogin'))
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
 
@@ -137,6 +138,7 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-success" element={<OrderSuccess />} />
+              <Route path="/track" element={<OrderTracking />} />
             </Route>
           </Routes>
         </Suspense>
