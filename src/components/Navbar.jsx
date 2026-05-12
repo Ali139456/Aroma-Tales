@@ -55,6 +55,14 @@ const Navbar = () => {
     }
   };
 
+  const isNavLinkActive = (path) => {
+    if (path === '/shop') return location.pathname.startsWith('/shop');
+    if (path === '/contact') return location.pathname.startsWith('/contact');
+    if (path === '/track') return location.pathname.startsWith('/track');
+    if (path === '/#collections') return location.pathname === '/' && location.hash === '#collections';
+    return false;
+  };
+
   return (
     <>
       {/* Announcement Bar */}
@@ -80,40 +88,61 @@ const Navbar = () => {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-10 sm:top-12 left-1/2 -translate-x-1/2 transition-all duration-500 w-[min(100%-1rem,72rem)] max-w-6xl rounded-full ${
+        className={`fixed top-10 sm:top-12 left-1/2 -translate-x-1/2 transition-all duration-500 w-[min(100%-0.75rem,92rem)] rounded-full ${
           isMobileMenuOpen ? 'z-[120] overflow-visible' : 'z-[100]'
         } ${
           isScrolled
-            ? 'glass-pill py-2.5 px-4 sm:py-3 sm:px-8 md:px-10'
-            : 'bg-white/40 backdrop-blur-sm border border-dark/5 py-3 px-4 sm:py-5 sm:px-8 md:px-10'
+            ? 'glass-pill py-2.5 px-4 sm:py-3 sm:px-6 md:px-10 lg:px-12'
+            : 'bg-white/40 backdrop-blur-sm border border-dark/5 py-3 px-4 sm:py-5 sm:px-6 md:px-10 lg:px-12'
         }`}
       >
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between gap-4 md:gap-6 xl:gap-10">
         {/* Logo */}
         <Link to="/" className="z-50 shrink-0">
           <img src="/logo-black.png" alt="Aroma Tales Logo" className="h-[24px] md:h-[36px] w-auto object-contain" />
         </Link>
 
-        {/* Desktop Links */}
-        <div className="hidden lg:flex items-center space-x-8 xl:space-x-12">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              onClick={() => handleLinkClick(link.path)}
-              className="text-[13px] uppercase tracking-[0.2em] text-dark/60 hover:text-dark font-medium transition-colors duration-300 relative group"
-            >
-              {link.name}
-              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-px bg-gold transition-all duration-300 group-hover:w-8"></span>
-            </Link>
-          ))}
-        </div>
+        {/* Desktop Links — centered in the bar for a wider, editorial layout */}
+        <nav
+          className="hidden lg:flex flex-1 min-w-0 justify-center items-center"
+          aria-label="Primary"
+        >
+          <div className="flex items-center gap-6 xl:gap-10 2xl:gap-12">
+            {navLinks.map((link) => {
+              const active = isNavLinkActive(link.path);
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  aria-current={active ? 'page' : undefined}
+                  onClick={() => handleLinkClick(link.path)}
+                  className={`nav-pill-link group relative py-2 px-0.5 text-[11px] xl:text-[12px] uppercase tracking-[0.22em] xl:tracking-[0.26em] font-semibold transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm ${
+                    active
+                      ? 'text-dark'
+                      : 'text-dark/45 hover:text-dark/90 hover:tracking-[0.28em] xl:hover:tracking-[0.32em]'
+                  }`}
+                >
+                  <span className="relative z-10">{link.name}</span>
+                  <span
+                    className={`pointer-events-none absolute -bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-gold shadow-[0_0_0_3px_rgba(212,175,55,0.12)] transition-all duration-300 ${
+                      active ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+                    }`}
+                    aria-hidden
+                  />
+                  {!active && (
+                    <span className="pointer-events-none absolute -bottom-px left-1/2 h-px w-0 max-w-[2.75rem] -translate-x-1/2 bg-gradient-to-r from-transparent via-gold/70 to-transparent transition-all duration-300 group-hover:w-full" />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
 
         {/* Icons & Search */}
-        <div className="flex items-center space-x-6 md:space-x-10 z-50">
+        <div className="flex items-center shrink-0 space-x-5 md:space-x-8 xl:space-x-10 z-50">
           <form
             onSubmit={handleSearch}
-            className="hidden lg:flex items-center bg-dark/5 rounded-full px-5 py-2 group focus-within:bg-dark/10 transition-all border border-transparent focus-within:border-dark/10 max-w-[220px] xl:max-w-none"
+            className="hidden lg:flex items-center bg-dark/5 rounded-full px-4 xl:px-5 py-2 group focus-within:bg-dark/10 transition-all border border-transparent focus-within:border-dark/10 min-w-0 max-w-[200px] xl:max-w-[280px] 2xl:max-w-[320px]"
           >
             <button type="submit">
               <Search className="w-4 h-4 text-dark/30 group-focus-within:text-dark transition-colors" />
@@ -123,7 +152,7 @@ const Navbar = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search fragrances..." 
-              className="bg-transparent border-none outline-none text-[11px] uppercase tracking-widest font-bold ml-3 w-28 xl:w-40 min-w-0 placeholder:text-dark/20 text-dark"
+              className="bg-transparent border-none outline-none text-[11px] uppercase tracking-widest font-bold ml-3 w-24 sm:w-28 xl:w-36 2xl:w-44 min-w-0 placeholder:text-dark/20 text-dark"
             />
           </form>
           

@@ -103,7 +103,7 @@ const Collections = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.8 }}
-              className="group cursor-pointer text-center md:text-left"
+              className="group cursor-pointer text-center"
             >
               <Link to={cat.filter} className="block">
                 <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden mb-8 shadow-sm">
@@ -123,13 +123,10 @@ const Collections = () => {
                   </div>
                 </div>
               </Link>
-              <h3 className="text-2xl font-serif text-dark mb-2 group-hover:text-gold transition-colors">
+              <h3 className="text-2xl font-serif text-dark mb-3 group-hover:text-gold transition-colors">
                 {cat.headline || cat.name}
               </h3>
-              <p className="text-[11px] md:text-xs text-dark/50 font-light leading-relaxed max-w-[280px] mx-auto line-clamp-3 min-h-[2.75rem]">
-                {cat.description?.trim() ? cat.description : 'Discover curated extracts for this line.'}
-              </p>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-dark/35 font-bold mt-3">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-dark/35 font-bold">
                 Browse products
               </p>
             </motion.div>
