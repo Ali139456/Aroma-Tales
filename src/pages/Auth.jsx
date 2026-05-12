@@ -151,12 +151,6 @@ const Auth = () => {
               ? 'Sign in to track orders and save your favorites.'
               : 'Join Aroma Tales for a smoother checkout and member perks.'}
           </p>
-          <p className="text-dark/45 text-sm mt-6 max-w-md mx-auto leading-relaxed">
-            <Link to="/track" className="font-semibold text-dark/75 underline underline-offset-2 hover:text-dark">
-              Track an order
-            </Link>{' '}
-            with your order number and checkout email — no account required.
-          </p>
         </motion.div>
 
         <motion.div

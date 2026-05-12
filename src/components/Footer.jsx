@@ -164,8 +164,12 @@ const Footer = () => {
             &copy; {currentYear} Aroma Tales. All Rights Reserved.
           </p>
           <div className="flex gap-10">
-            <a href="#" className="text-[10px] uppercase tracking-widest text-dark/30 hover:text-dark transition-colors font-bold">Privacy Policy</a>
-            <a href="#" className="text-[10px] uppercase tracking-widest text-dark/30 hover:text-dark transition-colors font-bold">Terms of Service</a>
+            <Link to="/privacy" className="text-[10px] uppercase tracking-widest text-dark/30 hover:text-dark transition-colors font-bold">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="text-[10px] uppercase tracking-widest text-dark/30 hover:text-dark transition-colors font-bold">
+              Terms of Service
+            </Link>
           </div>
         </div>
       </div>

@@ -44,7 +44,6 @@ const AdminLogin = () => {
     e.preventDefault();
     setError('');
     setInfo('');
-    setInfo('');
     if (!isSupabaseConfigured || !supabase) {
       setError('Supabase is not configured.');
       return;
@@ -100,9 +99,6 @@ const AdminLogin = () => {
           </div>
           <p className="text-[10px] uppercase tracking-[0.35em] font-bold text-red-600 mb-3">Staff only</p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-dark">Admin login</h1>
-          <p className="mt-4 text-dark/50 text-sm font-light leading-relaxed">
-            Sign in with a Supabase Auth user that has permission to edit catalog tables (see RLS policies).
-          </p>
         </div>
 
         <div className="admin-login-card bg-white p-8 sm:p-10 md:p-12 rounded-[1.75rem] sm:rounded-[2rem] border border-dark/5 shadow-[0_8px_40px_-12px_rgba(18,18,18,0.08)]">
@@ -165,11 +161,6 @@ const AdminLogin = () => {
               {loading ? 'Signing in…' : 'Sign in to CRM'}
             </button>
           </form>
-
-          <p className="mt-8 text-[11px] text-dark/35 leading-relaxed">
-            Create this user in Supabase → Authentication → Users, then run <code className="text-dark/50">supabase/schema.sql</code>{' '}
-            so authenticated accounts can insert/update products.
-          </p>
 
           <div className="mt-8 text-center">
             <Link
